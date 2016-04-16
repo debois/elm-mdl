@@ -5,3 +5,5 @@ index.html
 docs.json
 documentation.json
 .vscode/
+*~
+.*.swp
