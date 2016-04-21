@@ -466,14 +466,14 @@ view addr model items =
                       :: cs' "mdl-js-ripple-effect" model.ripple
                       :: cs' "mdl-menu__item--full-bleed-divider" item.divider
                       :: Style.attribute (Html.property "tabindex" (string "-1"))
+                      :: Style.attribute (Ripple.downOn "mousedown" (Signal.forwardTo addr (Ripple n)))
+                      :: Style.attribute (Ripple.downOn "touchstart" (Signal.forwardTo addr (Ripple n)))
+                      :: Style.attribute (Ripple.upOn "mouseup" (Signal.forwardTo addr (Ripple n)))
+                      :: Style.attribute (Ripple.upOn "mouseleave" (Signal.forwardTo addr (Ripple n)))
+                      :: Style.attribute (Ripple.upOn "touchend" (Signal.forwardTo addr (Ripple n)))
+                      :: Style.attribute (Ripple.upOn "blur" (Signal.forwardTo addr (Ripple n)))
                       :: []
                     )
---                      Ripple.downOn "mousedown" (Signal.forwardTo addr (Ripple n))
---                      Ripple.downOn "touchstart" (Signal.forwardTo addr (Ripple n))
---                      Ripple.upOn "mouseup" (Signal.forwardTo addr (Ripple n))
---                      Ripple.upOn "mouseleave" (Signal.forwardTo addr (Ripple n))
---                      Ripple.upOn "touchend" (Signal.forwardTo addr (Ripple n))
---                      Ripple.upOn "blur" (Signal.forwardTo addr (Ripple n))
 
                     ( (::) item.html <|
 
