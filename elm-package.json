@@ -1,5 +1,5 @@
 {
-    "version": "2.1.3",
+    "version": "2.1.4",
     "summary": "Material Design Lite port to Elm",
     "repository": "https://github.com/debois/elm-mdl.git",
     "license": "BSD3",
@@ -22,9 +22,8 @@
         "Material.Snackbar",
         "Material.Scheme"
     ],
-    "native-modules": true,
     "dependencies": {
-        "debois/elm-dom": "1.0.0 <= v < 2.0.0",
+        "debois/elm-dom": "1.1.0 <= v < 2.0.0",
         "elm-lang/core": "3.0.0 <= v < 4.0.0",
         "evancz/elm-effects": "2.0.1 <= v < 3.0.0",
         "evancz/elm-html": "4.0.2 <= v < 5.0.0",

@@ -1,48 +1,14 @@
 module Material.Menu.Oracle
-  ( Oracle
-  , decode
-  , Element
-  , Rect
-  , test
+  ( Oracle, Element
+  , decode, decode'
   ) where
 
-import Effects exposing (Effects, none)
-import Html exposing (..)
-import Html.Attributes as Html
-import Html.Events as Html exposing (defaultOptions)
-import Json.Encode exposing (string)
-import Json.Decode as Json exposing (Decoder, list, at, (:=), andThen)
-import Task
-import Native.Menu
 import DOM
-import String
+import Json.Decode exposing (..)
 
-import Native.Menu
-
-type alias Element =
-  { offsetTop : Float
-  , offsetLeft : Float
-  , offsetHeight : Float
-  , bounds : Rect
-  }
-
-type alias Rect =
-  { top   : Float
-  , left  : Float
-  , bottom: Float
-  , right : Float
-  , width : Float
-  , height: Float
-  }
-
---defaultRect =
---  { top = 0
---  , left = 0
---  , bottom = 0
---  , right = 0
---  , width = 0
---  , height = 0
---  }
+{-| An Oracle stores relevant information from DOM during Toggle and Close
+events. This computes more than it needs to.
+-}
 
 type alias Oracle =
   { button : Element
@@ -52,18 +18,21 @@ type alias Oracle =
   , offsetHeights : List Float
   }
 
-test =
-  DOM.target DOM.boundingClientRect
+type alias Element =
+  { offsetTop : Float
+  , offsetLeft : Float
+  , offsetHeight : Float
+  , bounds : DOM.Rectangle
+  }
 
-nodeList : Decoder a -> Decoder (List a)
-nodeList decode =
-  Native.decodeNodeList decode
+{-| Decode Oracle from the button's reference
+-}
 
 decode : Decoder Oracle
 decode =
-  Json.object5
-    ( \button menu container offsetTops offsetHeights ->
-        
+  object5
+    ( \button container menu offsetTops offsetHeights ->
+
         { button = button
         , menu   = menu
         , container = container
@@ -71,17 +40,39 @@ decode =
         , offsetHeights = offsetHeights
         }
     )
-    ("target" := element `andThen` (\target -> Json.succeed (Debug.log "target" target)))
-    (at ["target", "nextSibling[1]"] element)
-    (at ["target","nextSibling"] element)
-    (mapItems DOM.offsetTop)
-    (mapItems DOM.offsetHeight)
+    ("target" := element)
+    (at ["target", "nextSibling"]  element)
+    (at ["target", "nextSibling"] (DOM.childNode 1 element))
+    (at ["target", "nextSibling"] (DOM.childNode 1 (DOM.childNodes DOM.offsetTop)))
+    (at ["target", "nextSibling"] (DOM.childNode 1 (DOM.childNodes DOM.offsetHeight)))
 
-mapItems decoder =
-  at ["target", "nextSibling[1]", "childNodes"] (list decoder)
+{-| Decode Oracle from a menu item's reference
+-}
 
+decode' : Decoder Oracle
+decode' =
+  object5
+    ( \button container menu offsetTops offsetHeights ->
+
+        { button = button
+        , container = container
+        , menu   = menu
+        , offsetTops = offsetTops
+        , offsetHeights = offsetHeights
+        }
+    )
+    (at ["target", "parentNode", "parentNode", "previousSibling"] element)
+    (at ["target", "parentNode", "parentNode"] element)
+    (at ["target", "parentNode"] element)
+    (at ["target", "parentNode"] (DOM.childNodes DOM.offsetTop))
+    (at ["target", "parentNode"] (DOM.childNodes DOM.offsetHeight))
+
+{-| Decode an Element
+-}
+
+element : Decoder Element
 element =
-  Json.object4
+  object4
     (\offsetTop offsetLeft offsetHeight bounds ->
 
         { offsetTop = offsetTop
@@ -93,31 +84,4 @@ element =
     DOM.offsetTop
     DOM.offsetLeft
     DOM.offsetHeight
-    boundingClientRect
-
-boundingClientRect =
-  Json.object3
-    (\(x, y) width height ->
-      { top = y
-      , left = x
-      , bottom = 0
-      , right = 0
-      , width = width
-      , height = height
-      })
-    (position 0 0)
-    DOM.offsetWidth
-    DOM.offsetHeight
-
-position : Float -> Float -> Json.Decoder (Float, Float)
-position x y =
-  Json.object4
-    (\scrollLeft scrollTop offsetLeft offsetTop ->
-      (x + offsetLeft - scrollLeft, y + offsetTop - scrollTop))
-      DOM.scrollLeft
-      DOM.scrollTop
-      DOM.offsetLeft
-      DOM.offsetTop
-   `andThen` (\(x',y') ->
-      DOM.offsetParent (x', y') (position x' y')
-   )
+    DOM.boundingClientRect

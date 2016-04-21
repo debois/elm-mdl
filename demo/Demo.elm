@@ -119,7 +119,7 @@ nth k xs =
 
 update : Action -> Model -> ( Model, Effects Action )
 update action model =
-  case Debug.log "Action" action of
+  case action of
     LayoutAction a ->
       let
         ( lifted, layoutFx ) =

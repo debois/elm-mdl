@@ -1,11 +1,8 @@
 ELM=elm-make --yes
-PAGES=gh-pages
-
-build:
-	$(ELM) Main.elm --output elm.js
+PAGES=../elm-mdl-gh-pages
 
 demo:
-	(cd demo; $(ELM) Demo.elm --output ../elm.js)
+	(cd demo; $(ELM) Demo.elm --warn --output ../elm.js)
 
 comp: 
 	$(ELM) examples/Component.elm --warn --output elm.js

@@ -7,7 +7,6 @@ import Effects
 
 import Material.Menu as Menu exposing (..)
 import Material.Grid as Grid
-import Material.Icon as Icon
 import Material.Style exposing (Style)
 
 import Demo.Page as Page
@@ -53,7 +52,7 @@ model =
 -- ACTION, UPDATE
 
 
-type Action 
+type Action
   = Action Index Menu.Action
 
 
@@ -63,9 +62,9 @@ type alias Model =
 
 
 update : Action -> Model -> (Model, Effects.Effects Action)
-update action model = 
-  case action of 
-    Action idx action -> 
+update action model =
+  case action of
+    Action idx action ->
       Dict.get idx model.menus
       |> Maybe.map (\m0 ->
         let
@@ -102,10 +101,11 @@ view addr model =
          ]
      )
   |> Grid.grid []
-  |> flip (::) [] 
+  |> flip (::) []
   |> Page.body2 "Menus" srcUrl intro references
 
 
+container : Signal.Address Action -> String -> Index -> Menu.Model -> List Menu.Item -> Html
 container addr description idx model' items =
 
   let
@@ -210,11 +210,11 @@ intro =
 """
 
 srcUrl : String
-srcUrl = 
+srcUrl =
   "https://github.com/debois/elm-mdl/blob/master/demo/Demo/Menus.elm"
 
 references : List (String, String)
-references = 
+references =
   [ Page.package "http://package.elm-lang.org/packages/debois/elm-mdl/latest/Material-menu"
   , Page.mds "https://www.google.com/design/spec/components/menus.html"
   , Page.mdl "https://www.getmdl.io/components/#menus-section"
