@@ -92,7 +92,6 @@ title t =
     --, cs "mdl-typography--display-4" 
     -- TODO. Typography module
     ]
-    []
     [ text t ]
 
 

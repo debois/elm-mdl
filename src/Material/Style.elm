@@ -76,21 +76,18 @@ from a List Style. Use like this:
     myDiv =
       styled div
         [ css "classA", css "classB" ]
-        [ {- onClick ... (*) -} ]
         [ text "This is my div with classes classA and classB!" ]
 
-Note that if you do specify `style`, `class`, or `classList` attributes in
-(*), they will be discarded.
 -}
-styled : (List Attribute -> a) -> List Style -> List Attribute -> a
-styled ctor styles attrs' = 
+styled : (List Attribute -> a) -> List Style -> a
+styled ctor styles = 
   let
       { classes, css, attrs }  = collect styles
   in
     ctor
       (  Html.Attributes.style css
       :: Html.Attributes.class (String.join " " classes)
-      :: List.append attrs attrs'
+      :: attrs
       )
 
 
@@ -108,7 +105,7 @@ div element. Use like this:
 -}
 div : List Style -> List Html -> Html
 div styles elems = 
-  styled Html.div styles [] elems
+  styled Html.div styles elems
 
 
 {-| Convenience function for the reasonably common case of setting attributes
@@ -116,7 +113,7 @@ of a span element. See also `div`.
 -}
 span : List Style -> List Html -> Html
 span styles elems = 
-  styled Html.span styles [] elems
+  styled Html.span styles elems
 
 
 {-| Add a HTML class to a component. (Name chosen to avoid clashing with

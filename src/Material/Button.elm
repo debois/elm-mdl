@@ -60,7 +60,7 @@ import Effects exposing (Effects, none)
 import Signal exposing (Address, forwardTo)
 
 import Material.Helpers as Helpers
-import Material.Style exposing (Style, cs, cs', styled)
+import Material.Style as Style exposing (Style, cs, cs', styled)
 import Material.Ripple as Ripple
 import Material.Component as Component exposing (Indexed)
 
@@ -147,12 +147,11 @@ view kind addr model styling html =
     :: cs "mdl-js-button"
     :: cs' "mdl-js-ripple-effect" (model /= S Nothing)
     :: cs' kind (kind /= "")
+    :: Style.attribute (Helpers.blurOn "mouseup")
+    :: Style.attribute (Helpers.blurOn "mouseleave")
+    :: Style.attribute (Html.Events.onClick addr Click)
     :: styling
     )
-    [ Helpers.blurOn "mouseup"
-    , Helpers.blurOn "mouseleave"
-    , Html.Events.onClick addr Click
-    ]
     (case model of
       S (Just ripple) ->
         Ripple.view

@@ -93,6 +93,11 @@ lift get set fwd update action model =
     (set model submodel', Effects.map fwd e)
 
 
+fx : a -> Effects a
+fx =
+  Task.succeed >> Effects.task
+
+
 delay : Time -> a -> Effects a
 delay t x =
   Task.sleep t

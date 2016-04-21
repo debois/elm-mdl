@@ -64,13 +64,12 @@ produce clickable icons; use icon buttons in Material.Button.icon for that.
     icon : Html
     icon = Icon.view "trending_flat" [Icon.size48] []
 -}
-view : String -> List Style -> List Attribute -> Html
-view name styling attrs =
+view : String -> List Style -> Html
+view name styling =
   styled Html.i
     (  cs "material-icons"
     :: styling
     )
-    attrs
     [text name]
 
   
@@ -86,4 +85,4 @@ I.e., to produce a default size (24xp) "trending flat" icon:
     icon = Icon.i "trending_flat"
 -}
 i : String -> Html
-i name = view name [] []
+i name = view name []

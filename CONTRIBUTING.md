@@ -73,7 +73,7 @@ to Elm.
 
  - [Tables](https://www.getmdl.io/components/index.html#tables-section)
  - [Sliders](https://www.getmdl.io/components/index.html#sliders-section)
- - [Menus](https://www.getmdl.io/components/index.html#menus-section)
+ - [Menus](https://www.getmdl.io/components/index.html#menus-section) [Work in progress: [Alexander Foremny](https://github.com/aforemny)]
  - [Tooltips](https://www.getmdl.io/components/index.html#tooltips-section)
 
 ### Getting started with a new component

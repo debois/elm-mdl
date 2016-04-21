@@ -39,7 +39,7 @@ view =
             [ Badge.withBadge "♥" ]  
             [ text "Symbol" ]
           ]
-      , c [ Icon.view "flight_takeoff" [ Icon.size24, Badge.withBadge "33", Badge.overlap ] [] ]
+      , c [ Icon.view "flight_takeoff" [ Icon.size24, Badge.withBadge "33", Badge.overlap ] ]
       ]
   ]
   |> Page.body2 "Badges" srcUrl intro references

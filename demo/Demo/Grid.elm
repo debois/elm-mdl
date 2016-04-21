@@ -46,7 +46,7 @@ std = democell 200
 
 color : Int -> Style
 color k =
-    Array.get ((k + 11) % Array.length Color.hues) Color.hues
+    Array.get ((k + 0) % Array.length Color.hues) Color.hues
       |> Maybe.withDefault Color.Teal
       |> flip Color.color Color.S500
       |> Color.background

@@ -53,11 +53,10 @@ import Html.Events exposing (onClick, on)
 import Effects exposing (Effects)
 import Window
 
-import Json.Decode as Json
-
 import Material.Helpers exposing (..)
 import Material.Ripple as Ripple
 import Material.Icon as Icon
+import Material.Style as Style exposing (Style, cs, cs')
 
 import DOM
 
@@ -95,7 +94,7 @@ setupSignals f =
     , scrollMailbox.signal
         |> Signal.map ((<) 0.0)
         |> Signal.dropRepeats
-        |> Signal.map (ScrollContents >> f) 
+        |> Signal.map (TransitionHeader >> f) 
     ]
 
 
@@ -191,10 +190,10 @@ type Action
   -- Private
   | SmallScreen Bool -- True means small screen
   | ScrollTab Float
-  | ScrollContents Bool -- True means strictly positive scrollTop
-  | Ripple Int Ripple.Action
-  | Click 
+  | TransitionHeader Bool -- True means "transition to isCompact"
   | TransitionEnd
+  -- Subcomponents
+  | Ripple Int Ripple.Action
 
 
 {-| Component update.
@@ -233,25 +232,25 @@ update action model =
       (model, Effects.none) -- TODO
 
 
-    ScrollContents isScrolled -> 
+    TransitionHeader toCompact -> 
       let 
-        headerVisible = state.isSmallScreen || model.fixedHeader
+        headerVisible = (not state.isSmallScreen) || model.fixedHeader
         state' = 
           { state 
-          | isCompact = isScrolled
+          | isCompact = toCompact
           , isAnimating = headerVisible 
           }
       in
-        ( { model | state = S state' }, Effects.none )
+        if not state.isAnimating then 
+          ( { model | state = S state' }
+          , delay 200 TransitionEnd -- See comment on transitionend in view. 
+          )
+        else
+          (model, Effects.none)
 
 
     TransitionEnd -> 
       ( { model | state = S { state | isAnimating = False } }
-      , Effects.none
-      )
-
-    Click -> 
-      ( { model | state = S { state | isAnimating = True, isCompact = False } }
       , Effects.none
       )
 
@@ -267,29 +266,30 @@ spacer = div [class "mdl-layout-spacer"] []
 
 {-| Title in header row or drawer.
 -}
-title : String -> Html
-title t = span [class "mdl-layout__title"] [text t]
+title : List Style -> List Html -> Html
+title styles = 
+  Style.span (cs "mdl-layout__title" :: styles) 
 
 
 {-| Container for links.
 -}
-navigation : List Html -> Html
-navigation contents =
+navigation : List Style -> List Html -> Html
+navigation styles contents =
   nav [class "mdl-navigation"] contents
 
 
 {-| Link.
 -}
-link : List Attribute -> List Html -> Html
-link attrs contents =
-  a (class "mdl-navigation__link" :: attrs) contents
+link : List Style -> List Html -> Html
+link styles contents =
+  Style.styled a (cs "mdl-navigation__link" :: styles) contents
 
 
 {-| Header row. 
 -}
-row : List Html -> Html
-row = 
-  div [ class "mdl-layout__header-row" ] 
+row : List Style -> List Html -> Html
+row styles = 
+  Style.div (cs "mdl-layout__header-row" :: styles) 
 
 
 -- MAIN VIEWS
@@ -329,8 +329,8 @@ toList x =
     Just y -> [y]
 
 
-tabsView : Addr -> Model -> List Html -> Html
-tabsView addr model tabs =
+tabsView : Addr -> Model -> (List Html, List Style) -> Html
+tabsView addr model (tabs, tabStyles) =
   let chevron direction offset =
         div
           [ classList
@@ -338,22 +338,25 @@ tabsView addr model tabs =
               , ("mdl-layout__tab-bar-" ++ direction ++ "-button", True)
               ]
           ]
-          [ Icon.view ("chevron_" ++ direction) [Icon.size24]
-              [onClick addr (ScrollTab offset)]
-                -- TODO: Scroll event
+          [ Icon.view ("chevron_" ++ direction) 
+              [ Icon.size24
+              , Style.attribute <| onClick addr (ScrollTab offset)
+              ]
+              -- TODO: Scroll event
           ]
   in
-    div
-      [ class "mdl-layout__tab-bar-container"]
+    Style.div
+      ( cs "mdl-layout__tab-bar-container"
+      :: []
+      )
       [ chevron "left" -100
-      , div
-          [ classList
-              [ ("mdl-layout__tab-bar", True)
-              , ("mdl-js-ripple-effect", model.rippleTabs)
-              , ("mds-js-ripple-effect--ignore-events", model.rippleTabs)
-              , ("is-casting-shadow", model.mode == Standard)
-              ]
-          ]
+      , Style.div
+          (  cs "mdl-layout__tab-bar" 
+          :: cs' "mdl-js-ripple-effect" model.rippleTabs
+          :: cs' "mds-js-ripple-effect--ignore-events" model.rippleTabs
+          :: cs' "is-casting-shadow"  (model.mode == Standard)
+          :: tabStyles
+          )
           (tabs |> List.indexedMap (\tabIndex tab ->
             filter a
               [ classList
@@ -402,8 +405,14 @@ headerView addr model (drawerButton, rows, tabs) =
       ]
       |> List.append (
         if isWaterfall model.mode then 
-          [ onClick addr Click
-          , on "transitionend" Json.value (\_ -> Signal.message addr TransitionEnd)
+          [  
+          --  onClick addr Click
+          --, on "transitionend" Json.value (\_ -> Signal.message addr TransitionEnd)
+            {- There is no "ontransitionend" property; you'd have to add a listener, 
+            which Elm won't let us. We manually fire a delayed tick instead. 
+            See also: https://github.com/evancz/virtual-dom/issues/30
+            -}
+            onClick addr (TransitionHeader False)
           ]
         else
           []
@@ -461,7 +470,7 @@ the title of each tab.
 type alias Contents =
   { header : List Html
   , drawer : List Html
-  , tabs : List Html
+  , tabs : (List Html, List Style)
   , main : List Html
   }
 
@@ -485,11 +494,14 @@ view addr model { drawer, header, tabs, main } =
           -- No drawer: no button.
            (Nothing, Nothing)
 
+    hasTabs = 
+      not (List.isEmpty (fst tabs))
+
     hasHeader = 
-      not (List.isEmpty tabs && List.isEmpty header)
+      hasTabs || (not (List.isEmpty header))
 
     tabsElems = 
-      if List.isEmpty tabs then 
+      if not hasTabs then
         Nothing
       else 
         Just (tabsView addr model tabs)
@@ -506,11 +518,11 @@ view addr model { drawer, header, tabs, main } =
             , ("is-upgraded", True)
             , ("is-small-screen", (s model).isSmallScreen)
             , ("has-drawer", drawer /= [])
-            , ("has-tabs", tabs /= [])
+            , ("has-tabs", hasTabs)
             , ("mdl-js-layout", True)
             , ("mdl-layout--fixed-drawer", model.fixedDrawer && drawer /= [])
             , ("mdl-layout--fixed-header", model.fixedHeader && hasHeader)
-            , ("mdl-layout--fixed-tabs", model.fixedTabs && tabs /= [])
+            , ("mdl-layout--fixed-tabs", model.fixedTabs && hasTabs)
             ]
         ]
         [ if hasHeader then

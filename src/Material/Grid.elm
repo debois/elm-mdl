@@ -93,7 +93,7 @@ maxWidth w = Style.css "max-width" w
 -}
 grid : List Style -> List Cell -> Html
 grid styling cells =
-  styled div (cs "mdl-grid" :: styling) [] (List.map (\(Cell elm) -> elm) cells)
+  Style.div (cs "mdl-grid" :: styling) (List.map (\(Cell elm) -> elm) cells)
 
 
 {-| Device specifiers, used with `size` and `offset`. (A `Device` really
@@ -184,4 +184,4 @@ module defines various styles to set size, offset, etc. of the cell.
 -}
 cell : List Style -> List Html -> Cell
 cell styling elms =
-  Cell (styled div (cs "mdl-cell" :: styling) [] elms)
+  Cell (Style.div (cs "mdl-cell" :: styling) elms)

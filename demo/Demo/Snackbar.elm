@@ -8,7 +8,7 @@ import Time exposing (Time, millisecond)
 
 import Material.Helpers exposing (map1st, map2nd, pure, delay)
 import Material.Color as Color
-import Material.Style exposing (styled, cs, css)
+import Material.Style as Style exposing (cs, css, Style)
 import Material.Snackbar as Snackbar
 import Material.Button as Button exposing (Action(..))
 import Material.Grid exposing (..)
@@ -169,22 +169,20 @@ transitionLength : Time
 transitionLength = 150 * millisecond
 
 
-transitionInner : (String, String)
+transitionInner : Style
 transitionInner = 
-  ("transition"
-  , "box-shadow 333ms ease-in-out 0s, " 
-      ++ "width " ++ toString transitionLength ++ "ms, " 
-      ++ "height " ++ toString transitionLength ++ "ms, "
-      ++ "background-color " ++ toString transitionLength ++ "ms"
-  )
+  css "transition"
+    <| "box-shadow 333ms ease-in-out 0s, " 
+    ++ "width " ++ toString transitionLength ++ "ms, " 
+    ++ "height " ++ toString transitionLength ++ "ms, "
+    ++ "background-color " ++ toString transitionLength ++ "ms"
 
 
-transitionOuter : (String, String)
+transitionOuter : Style
 transitionOuter = 
-  ("transition"
-  , "width " ++ toString transitionLength ++ "ms ease-in-out 0s, "
-      ++ "margin " ++ toString transitionLength ++ "ms ease-in-out 0s"
-  )
+  css "transition" 
+    <| "width " ++ toString transitionLength ++ "ms ease-in-out 0s, "
+    ++ "margin " ++ toString transitionLength ++ "ms ease-in-out 0s"
 
 
 clickView : Model -> Square -> Html
@@ -220,42 +218,38 @@ clickView model (k, square) =
     (which animates only width, to cause reflow of surrounding boxes), 
     and an absolutely positioned inner div (to force animation to start
     in the lower-left corner. -}
-    div 
-      [ style 
-          [ ("height", boxHeight)
-          , ("width", width)
-          , ("position", "relative")
-          , ("display", "inline-block")
-          , ("margin", margin)
-          , ("z-index", "0")
-          , transitionOuter
-          ]
-      , key <| toString k
-        {- Interestingly, not setting key messes up CSS transitions in spectacular ways. -}
+    Style.div 
+      [ css "height" boxHeight
+      , css "width" width
+      , css "position" "relative"
+      , css "display" "inline-block"
+      , css "margin" margin
+      , css "z-index" "0"
+      , transitionOuter
+      , Style.attribute (key <| toString k)
+        {- Interestingly, not setting key messes up CSS transitions in
+        spectacular ways. -}
       ]
-      [ styled div
+      [ Style.div
           [ Color.background color
           , Color.text Color.primaryContrast
           , if selected then e8 else e2
-          ] 
-          [ style
-              [ -- Center contents
-                ("display", "inline-flex")
-              , ("align-items", "center")
-              , ("justify-content", "center")
-              , ("flex", "0 0 auto")
-                -- Sizing
-              , ("height", height)
-              , ("width", width)
-              , ("border-radius", "2px")
-              , ("box-sizing", "border-box")
-                -- Force appearance/disapparenace to be from/to lower-left corner. 
-              , ("position", "absolute")
-              , ("bottom", "0")
-              , ("left", "0")
-                -- Transitions
-              , transitionInner
-              ]
+            -- Center contents
+          , css "display" "inline-flex"
+          , css "align-items" "center"
+          , css "justify-content" "center"
+          , css "flex" "0 0 auto"
+             -- Sizing
+          , css "height" height
+          , css "width" width
+          , css "border-radius" "2px"
+          , css "box-sizing" "border-box"
+             -- Force appearance/disapparenace to be from/to lower-left corner. 
+          , css "position" "absolute"
+          , css "bottom" "0"
+          , css "left" "0"
+             -- Transitions
+          ,  transitionInner
           ]
           [ div [] [ text <| toString k ] ]
         ]
