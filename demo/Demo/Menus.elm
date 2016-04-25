@@ -3,11 +3,13 @@ module Demo.Menus where
 import Dict
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Effects
+import Effects exposing (Effects)
 
-import Material.Menu as Menu exposing (..)
+import Material.Color as Color
+import Material.Elevation as Elevation
 import Material.Grid as Grid
-import Material.Style exposing (Style)
+import Material.Menu as Menu exposing (..)
+import Material.Style as Style exposing (Style, cs)
 
 import Demo.Page as Page
 
@@ -18,27 +20,13 @@ import Demo.Page as Page
 type alias Index = Int
 
 
-type alias View =
-  Signal.Address Menu.Action -> Menu.Model -> List Style -> List Html -> Html
-
-
-type alias View' =
-  Signal.Address Menu.Action -> Menu.Model -> Html
-
-
-view' : View -> List Style -> Html -> Signal.Address Menu.Action -> Menu.Model -> Html
-view' view coloring elem addr model =
-  view addr model coloring [elem]
-
-
-menus : List (Index, (Style, String))
+menus : List (Index, (Alignment, String))
 menus =
-  [ (Menu.bottomLeft, "Lower left")
-  , (Menu.bottomRight, "Lower right")
-  , (Menu.topLeft, "Top left")
-  , (Menu.topRight, "Top right")
-  ]
-  |> List.indexedMap (\i r -> (i, r))
+  [ (Menu.BottomLeft, "Lower left")
+  , (Menu.BottomRight, "Lower right")
+  , (Menu.TopLeft, "Top left")
+  , (Menu.TopRight, "Top right")
+  ] |> List.indexedMap (,)
 
 
 model : Model
@@ -61,7 +49,7 @@ type alias Model =
   }
 
 
-update : Action -> Model -> (Model, Effects.Effects Action)
+update : Action -> Model -> (Model, Effects Action)
 update action model =
   case action of
     Action idx action ->
@@ -86,7 +74,7 @@ view addr model =
        let
          model' = model.menus
                 |> Dict.get idx
-                |> Maybe.withDefault (Menu.model True Menu.unaligned)
+                |> Maybe.withDefault (Menu.model True Menu.Unaligned)
          items  =
            [ Menu.item False True  (text "Some Action")
            , Menu.item True  True  (text "Another Action")
@@ -114,55 +102,63 @@ container addr description idx model' items =
         align =
           if rightAlign then ("right", "16px") else ("left", "16px")
       in
-        div
-          [ class "bar"
-          , style
-            [ ("box-sizing", "border-box")
-            , ("background", "#3F51B5")
-            , ("color", "white")
-            , ("width", "100%")
-            , ("padding", "16px")
-            , ("position", "relative")
-            , ("height", "64px")
-            ]
+        Style.div
+          [ Style.cs "bar"
+          , Color.background Color.accent
+          , Color.text Color.white
+          , Style.attribute
+            ( style
+              [ ("box-sizing", "border-box")
+              , ("width", "100%")
+              , ("padding", "16px")
+              , ("position", "relative")
+              , ("height", "64px")
+              ]
+            )
           ]
-          [ div
-              [ class "wrapper"
-              , style
-                [ ("position", "absolute")
-                , align
-                , ("box-sizing", "border-box")
-                ]
+          [ Style.div
+              [ cs "wrapper"
+              , Style.attribute
+                ( style
+                  [ ("position", "absolute")
+                  , align
+                  , ("box-sizing", "border-box")
+                  ]
+                )
               ]
               ( Menu.view (Signal.forwardTo addr (Action idx)) model' items
               )
           ]
 
     background =
-      div
-      [ class "background"
-      , style
-        [ ("height", "148px")
-        , ("background", "white")
-        , ("width", "100%")
-        ]
+      Style.div
+      [ cs "background"
+      , Style.attribute
+        ( style
+          [ ("height", "148px")
+          , ("background", "white")
+          , ("width", "100%")
+          ]
+        )
       ]
       [
       ]
 
   in
 
-    div
-    [ class "section"
+    Style.div
+    [ cs "section"
     ]
-    [ div
-        [ class "container mdl-shadow--2dp"
-        , style
-          [ ("position", "relative")
-          , ("width", "200px")
-          , ("margin", "0 auto")
-          , ("margin-bottom", "40px")
-          ]
+    [ Style.div
+        [ Elevation.e2
+        , Style.attribute
+          ( style
+            [ ("position", "relative")
+            , ("width", "200px")
+            , ("margin", "0 auto")
+            , ("margin-bottom", "40px")
+            ]
+          )
         ]
         ( if idx > 1 then
               [ background
@@ -174,15 +170,17 @@ container addr description idx model' items =
               ]
         )
 
-    , div
-        [ style
-          [ ("margin", "0 auto")
-          , ("width", "200px")
-          , ("text-align", "center")
-          , ("height", "48px")
-          , ("line-height", "48px")
-          , ("margin-bottom", "40px")
-          ]
+    , Style.div
+        [ Style.attribute
+          ( style
+            [ ("margin", "0 auto")
+            , ("width", "200px")
+            , ("text-align", "center")
+            , ("height", "48px")
+            , ("line-height", "48px")
+            , ("margin-bottom", "40px")
+            ]
+          )
         ]
         [ text description
         ]
