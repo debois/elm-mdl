@@ -7,10 +7,9 @@ import Array exposing (Array)
 import DOM
 import Json.Decode exposing (..)
 
-{-| An Geometry stores relevant information from DOM during Toggle and Close
-events. This computes more than it needs to.
+{-| An Geometry stores relevant information from DOM during Open and Close
+events. (This computes more than it needs to.)
 -}
-
 type alias Geometry =
   { button : Element
   , menu : Element
@@ -30,7 +29,6 @@ type alias Element =
 
 {-| Decode Geometry from the button's reference
 -}
-
 decode : Decoder Geometry
 decode =
   object5 Geometry
@@ -43,7 +41,6 @@ decode =
 
 {-| Decode Geometry from a menu item's reference
 -}
-
 decode' : Decoder Geometry
 decode' =
   object5 Geometry
@@ -53,10 +50,9 @@ decode' =
     (DOM.target (DOM.parentElement (DOM.childNodes DOM.offsetTop `andThen` (succeed << Array.fromList))))
     (DOM.target (DOM.parentElement (DOM.childNodes DOM.offsetHeight `andThen` (succeed << Array.fromList))))
 
+
 {-| Decode an Element
 -}
-
-
 element : Decoder Element
 element =
   object4 Element
