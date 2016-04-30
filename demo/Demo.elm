@@ -221,7 +221,7 @@ tabs =
       Demo.Snackbar.view (Signal.forwardTo addr SnackbarAction) model.snackbar)
   , ("Textfields", "textfields", \addr model ->
       Demo.Textfields.view (Signal.forwardTo addr TextfieldAction) model.textfields)
-   , ("Toggles", "toggles", \addr model -> 
+  , ("Toggles", "toggles", \addr model -> 
       Demo.Toggles.view (Signal.forwardTo addr TogglesAction) model.toggles)
   --, ("Template", "tempate", \addr model -> 
   --    Demo.Template.view (Signal.forwardTo addr TemplateAction) model.template)

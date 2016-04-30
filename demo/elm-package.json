@@ -4,7 +4,7 @@
     "repository": "https://github.com/debois/elm-mdl.git",
     "license": "BSD3",
     "source-directories": [
-        "../src",
+        "../src", 
         "."
     ],
     "exposed-modules": [

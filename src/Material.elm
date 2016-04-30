@@ -168,9 +168,9 @@ import Dict
 import Effects exposing (Effects)
 
 import Material.Button as Button
+import Material.Textfield as Textfield
 import Material.Menu as Menu
 import Material.Snackbar as Snackbar
-import Material.Textfield as Textfield
 import Material.Toggles as Toggles
 import Material.Component as Component exposing (Indexed)
 --import Material.Template as Template
@@ -194,8 +194,8 @@ type alias Model =
 model : Model
 model = 
   { button = Dict.empty
-  , menu = Dict.empty
   , textfield = Dict.empty
+  , menu = Dict.empty
   , snackbar = Nothing
   , toggles = Dict.empty
 --, template = Dict.empty

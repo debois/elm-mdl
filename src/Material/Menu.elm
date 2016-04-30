@@ -187,7 +187,7 @@ update action model =
     -- Open the menu.
 
     Open' geometry ->
-    
+
       effect
       ( Effects.task (Task.succeed Tick') )
       { model | animationState =
@@ -234,7 +234,7 @@ update action model =
     -- Close the menu after some delay for the ripple effect to show.
 
     Select' idx geometry ->
-    
+
       effect
       ( Effects.task
         <| Task.andThen (Task.sleep constant.closeTimeout) << always
