@@ -28,6 +28,7 @@ import Demo.Textfields
 import Demo.Snackbar
 import Demo.Badges
 import Demo.Elevation
+import Demo.Toggles
 --import Demo.Template
 
 
@@ -78,6 +79,7 @@ type alias Model =
   , buttons : Demo.Buttons.Model
   , menus : Demo.Menus.Model
   , textfields : Demo.Textfields.Model
+  , toggles : Demo.Toggles.Model
   , snackbar : Demo.Snackbar.Model
   --, template : Demo.Template.Model
   }
@@ -90,6 +92,7 @@ model =
   , buttons = Demo.Buttons.model
   , menus = Demo.Menus.model
   , textfields = Demo.Textfields.model
+  , toggles = Demo.Toggles.model
   , snackbar = Demo.Snackbar.model
   --, template = Demo.Template.model
   }
@@ -109,6 +112,7 @@ type Action
   | MenusAction Demo.Menus.Action
   | TextfieldAction Demo.Textfields.Action
   | SnackbarAction Demo.Snackbar.Action
+  | TogglesAction Demo.Toggles.Action
 --  | TemplateAction Demo.Template.Action
 
 
@@ -153,6 +157,8 @@ update action model =
     TextfieldAction a -> lift  .textfields (\m x->{m|textfields=x}) TextfieldAction Demo.Textfields.update a model
 
     SnackbarAction  a -> lift  .snackbar   (\m x->{m|snackbar  =x}) SnackbarAction Demo.Snackbar.update   a model
+
+    TogglesAction    a -> lift .toggles   (\m x->{m|toggles    =x}) TogglesAction Demo.Toggles.update   a model
 
     --TemplateAction  a -> lift  .template   (\m x->{m|template  =x}) TemplateAction Demo.Template.update   a model
 
@@ -215,6 +221,8 @@ tabs =
       Demo.Snackbar.view (Signal.forwardTo addr SnackbarAction) model.snackbar)
   , ("Textfields", "textfields", \addr model ->
       Demo.Textfields.view (Signal.forwardTo addr TextfieldAction) model.textfields)
+  , ("Toggles", "toggles", \addr model -> 
+      Demo.Toggles.view (Signal.forwardTo addr TogglesAction) model.toggles)
   --, ("Template", "tempate", \addr model -> 
   --    Demo.Template.view (Signal.forwardTo addr TemplateAction) model.template)
   ]

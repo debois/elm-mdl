@@ -171,6 +171,7 @@ import Material.Button as Button
 import Material.Menu as Menu
 import Material.Snackbar as Snackbar
 import Material.Textfield as Textfield
+import Material.Toggles as Toggles
 import Material.Component as Component exposing (Indexed)
 --import Material.Template as Template
 
@@ -183,6 +184,7 @@ type alias Model =
   , textfield : Indexed Textfield.Model
   , menu : Indexed Menu.Model
   , snackbar : Maybe (Snackbar.Model Int) 
+  , toggles : Indexed Toggles.Model
 --  , template : Indexed Template.Model
   }
 
@@ -195,6 +197,7 @@ model =
   , menu = Dict.empty
   , textfield = Dict.empty
   , snackbar = Nothing
+  , toggles = Dict.empty
 --, template = Dict.empty
   }
 

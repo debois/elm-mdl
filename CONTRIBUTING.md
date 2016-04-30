@@ -66,12 +66,12 @@ The remaining components, use Javascript
 in various ways. Toggles seem to use Javascript exclusively to insert ripple-animations and __might__ be easy to implement using the `Ripple.elm`
 component:
 
- - [Toggles](https://www.getmdl.io/components/index.html#toggles-section)
+ - [Toggles](https://www.getmdl.io/components/index.html#toggles-section)[WIP]
 
 The rest I haven't looked at; they may or may not be straightforward to port
 to Elm.
 
- - [Tables](https://www.getmdl.io/components/index.html#tables-section)
+ - [Tables](https://www.getmdl.io/components/index.html#tables-section)[Work in progress: [Alexander Foremny](https://github.com/aforemny)]
  - [Sliders](https://www.getmdl.io/components/index.html#sliders-section)
  - [Menus](https://www.getmdl.io/components/index.html#menus-section) [Work in progress: [Alexander Foremny](https://github.com/aforemny)]
  - [Tooltips](https://www.getmdl.io/components/index.html#tooltips-section)
