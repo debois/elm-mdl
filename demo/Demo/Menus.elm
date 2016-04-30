@@ -67,6 +67,7 @@ menus =
 
   )
 
+
 items : List Menu.Item
 items =
   [ Menu.item False True  (text "Some Action")
@@ -88,7 +89,6 @@ describe menu =
 
 view : Signal.Address Action -> Model -> Html
 view addr model =
-
   menus
   |> List.map (\( idx, c ) ->
        Grid.cell
@@ -109,7 +109,6 @@ container :
   -> Menu.Instance Material.Model Action
   -> List Menu.Item
   -> Html
-
 container addr model idx menu items =
 
   let
@@ -203,9 +202,11 @@ intro =
 
 """
 
+
 srcUrl : String
 srcUrl =
   "https://github.com/debois/elm-mdl/blob/master/demo/Demo/Menus.elm"
+
 
 references : List (String, String)
 references =
@@ -213,4 +214,3 @@ references =
   , Page.mds "https://www.google.com/design/spec/components/menus.html"
   , Page.mdl "https://www.getmdl.io/components/#menus-section"
   ]
-

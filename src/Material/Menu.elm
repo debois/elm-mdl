@@ -296,18 +296,14 @@ view addr model items =
 
     , css' "width"
         ( case model.geometry of
-            Just geometry ->
-              geometry.menu.bounds.width
-              |> toPx
+            Just geometry -> geometry.menu.bounds.width |> toPx
             Nothing -> "auto"
         )
         ( model.geometry /= Nothing )
 
     , css' "height"
         ( case model.geometry of
-            Just geometry ->
-              geometry.menu.bounds.height
-              |> toPx
+            Just geometry -> geometry.menu.bounds.height |> toPx
             Nothing -> "auto"
         )
         ( model.geometry /= Nothing )
@@ -317,7 +313,6 @@ view addr model items =
         case model.geometry of
           Nothing -> "auto"
           Just geometry ->
-
             (geometry.button.offsetTop + geometry.button.offsetHeight)
             |> toPx
 
@@ -326,7 +321,6 @@ view addr model items =
         case model.geometry of
           Nothing -> "auto"
           Just geometry ->
-
             let
               right e = e.bounds.left + e.bounds.width
             in
@@ -338,40 +332,32 @@ view addr model items =
         case model.geometry of
           Nothing -> "auto"
           Just geometry ->
-
             let
               bottom =
                 geometry.container.bounds.top +
                 geometry.container.bounds.height
             in
-              (bottom - geometry.button.bounds.top)
-              |> toPx
+              (bottom - geometry.button.bounds.top) |> toPx
 
     , flip (css' "left") (((model.alignment == TopLeft) || (model.alignment == BottomLeft)) && model.geometry /= Nothing) <|
 
         case model.geometry of
+          Just geometry -> geometry.menu.offsetLeft |> toPx
           Nothing -> "auto"
-          Just geometry ->
-
-            geometry.menu.offsetLeft |> toPx
     ]
     [ styled div
       [ cs "mdl-menu__outline"
 
       , css' "width"
           ( case model.geometry of
-              Just geometry ->
-                geometry.menu.bounds.width
-                |> toPx
               Nothing -> "auto"
+              Just geometry -> geometry.menu.bounds.width |> toPx
           )
           (model.geometry /= Nothing)
 
       , css' "height"
           ( case model.geometry of
-              Just geometry ->
-                geometry.menu.bounds.height
-                |> toPx
+              Just geometry -> geometry.menu.bounds.height |> toPx
               Nothing -> "auto"
           )
           (model.geometry /= Nothing)
@@ -397,10 +383,8 @@ view addr model items =
       , cs' "is-animating" ((model.animationState == Opening) || (model.animationState == Closing))
       , css' "clip"
         (case model.geometry of
-
            Nothing -> "auto"
            Just geometry ->
-
              let
                width  = geometry.menu.bounds.width
                height = geometry.menu.bounds.height
@@ -419,7 +403,6 @@ view addr model items =
         )
         (model.geometry /= Nothing)
       ]
-
       (List.map2 (makeItem addr model) [1..List.length items] items)
     ]
   ]
