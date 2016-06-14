@@ -172,7 +172,6 @@ import Material.Menu as Menu
 import Material.Snackbar as Snackbar
 import Material.Layout as Layout
 import Material.Toggles as Toggles
-import Material.ProgressBar as ProgressBar
 --import Material.Template as Template
 
 

@@ -43,12 +43,9 @@ for a live demo.
 -}
 
 
-import Platform.Cmd exposing (Cmd, none)
 import Html exposing (..)
 
-import Parts exposing (Indexed)
 import Material.Options as Options exposing (Style, cs, nop)
-
 
 import Html.Attributes exposing (class, classList, style)
 
