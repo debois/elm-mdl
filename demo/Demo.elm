@@ -27,6 +27,7 @@ import Demo.Snackbar
 import Demo.Badges
 import Demo.Elevation
 import Demo.Toggles
+import Demo.ProgressBar
 --import Demo.Template
 
 
@@ -70,6 +71,7 @@ type alias Model =
   , textfields : Demo.Textfields.Model
   , toggles : Demo.Toggles.Model
   , snackbar : Demo.Snackbar.Model
+  , progressbar : Demo.ProgressBar.Model
   --, template : Demo.Template.Model
   , selectedTab : Int
   }
@@ -85,6 +87,7 @@ model =
   , textfields = Demo.Textfields.model
   , toggles = Demo.Toggles.model
   , snackbar = Demo.Snackbar.model
+  , progressbar = Demo.ProgressBar.model
   --, template = Demo.Template.model
   , selectedTab = 0
   }
@@ -109,6 +112,7 @@ type Msg
   | TextfieldMsg Demo.Textfields.Msg
   | SnackbarMsg Demo.Snackbar.Msg
   | TogglesMsg Demo.Toggles.Msg
+  | ProgressBarMsg Demo.ProgressBar.Msg
   --| TemplateMsg Demo.Template.Msg
 
 
@@ -165,6 +169,8 @@ update action model =
 --
     TogglesMsg    a -> lift .toggles   (\m x->{m|toggles    =x}) TogglesMsg Demo.Toggles.update   a model
 --
+    ProgressBarMsg  a -> lift  .progressbar   (\m x->{m|progressbar  =x}) ProgressBarMsg Demo.ProgressBar.update   a model
+--
     --TemplateMsg  a -> lift  .template   (\m x->{m|template  =x}) TemplateMsg Demo.Template.update   a model
 
         
@@ -215,6 +221,7 @@ tabs =
   , ("Snackbar", "snackbar", .snackbar >> Demo.Snackbar.view >> App.map SnackbarMsg)
   , ("Textfields", "textfields", .textfields >> Demo.Textfields.view >> App.map TextfieldMsg)
   , ("Toggles", "toggles", .toggles >> Demo.Toggles.view >> App.map TogglesMsg)
+  , ("ProgressBar", "progressbar", .progressbar >> Demo.ProgressBar.view >> App.map ProgressBarMsg)
   --, ("Template", "template", .template >> Demo.Template.view >> App.map TemplateMsg)
   --    Demo.Template.view (Signal.forwardTo addr TemplateMsg) model.template)
   ]

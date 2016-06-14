@@ -19,7 +19,8 @@
         "Material.Icon",
         "Material.Layout",
         "Material.Snackbar",
-        "Material.Textfield"
+        "Material.Textfield",
+        "Material.ProgressBar"
     ],
     "dependencies": {
         "debois/elm-dom": "1.2.0 <= v < 2.0.0",
