@@ -97,7 +97,7 @@ clampSize = clamp 0 100
 
 -- ATTRIBUTES
 
-{-| Set the type of the progress bar to default
+{-| Set the type of the progress bar to 'default'.
 -}
 default : Property m
 default =
@@ -112,17 +112,13 @@ indeterminate =
   Options.set (\config -> { config | bartype = Indeterminate })
 
 
-{-| Sets the progress of the bar to the given value.
-
-TODO: Example
+{-| Set the current progress of the progressbar.
 -}
 progress : Float -> Property m
 progress amount =
   Options.set (\config -> { config | progress =  clampSize amount})
 
-{-| Sets the buffer of the bar to the given value.
-
-TODO: Example
+{-| Set the current progress of the buffer.
 -}
 buffer : Float -> Property m
 buffer amount =
@@ -131,7 +127,17 @@ buffer amount =
 -- VIEW
 
 
-{-| Component view.
+{-| View function for progress bars. Set the progress of the bar with `progress`,
+you can also set the buffer of the bar using `buffer`. You can also use an indeterminate
+progress bar by using `indeterminate`.
+
+For example:
+
+    import Material.ProgressBar as ProgressBar
+
+    progressBar : Html m
+    progressBar = ProgressBar.view [ ProgressBar.progress 35
+                                   , ProgressBar.buffer 85]
 -}
 view : List (Property m) -> Html m
 view options =
