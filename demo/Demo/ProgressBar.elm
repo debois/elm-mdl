@@ -89,32 +89,26 @@ view model  =
      (Grid.grid []
         [ Grid.cell
             [ Grid.size Grid.All 4]
-            [ ProgressBar.render Mdl [0] model.mdl
-                [ProgressBar.progress 35]
-                []
+            [ ProgressBar.view [ ProgressBar.progress 35 ]
             , p [] [text "Default progress bar"]
             ]
         , Grid.cell
             [ Grid.size Grid.All 4]
-            [ ProgressBar.render Mdl [1] model.mdl
-                [ProgressBar.indeterminate] []
+            [ ProgressBar.view [ ProgressBar.indeterminate ]
             , p [] [text "Indeterminate"]
             ]
 
         , Grid.cell
             [ Grid.size Grid.All 4]
-            [ ProgressBar.render Mdl [2] model.mdl
+            [ ProgressBar.view
                 [ ProgressBar.buffer 78
                 , ProgressBar.progress 44]
-                []
             , p [] [text "Buffering "]
             ]
 
         , Grid.cell
             [ Grid.size Grid.All 4]
-            [ ProgressBar.render Mdl [3] model.mdl
-                [ ProgressBar.progress model.currentProgress ]
-                []
+            [ ProgressBar.view [ ProgressBar.progress model.currentProgress ]
             , p [] [text "Loading bar with progress update"]
             , div []
               [ Button.render Mdl [4] model.mdl

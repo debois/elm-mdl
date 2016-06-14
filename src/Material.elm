@@ -187,7 +187,6 @@ type alias Model =
   , snackbar : Maybe (Snackbar.Model Int) 
   , layout : Layout.Model
   , toggles : Indexed Toggles.Model
-  , progressbar : Indexed ProgressBar.Model
 --  , template : Indexed Template.Model
   }
 
@@ -202,7 +201,6 @@ model =
   , snackbar = Nothing
   , layout = Layout.defaultModel
   , toggles = Dict.empty
-  , progressbar = Dict.empty
 --  , template = Dict.empty
   }
 
