@@ -79,24 +79,34 @@ view model  =
             ]
         ])
     ]
-  --|> Page.body2 "TEMPLATE" srcUrl intro references
 
 
 intro : Html m
 intro =
-  Page.fromMDL "https://www.getmdl.io/components/index.html#TEMPLATE-section" """
-> ...
+  Page.fromMDL "https://getmdl.io/components/index.html#loading-section/progress" """
+> The Material Design Lite (MDL) progress component is a visual indicator of
+> background activity in a web page or application. A progress indicator
+> consists of a (typically) horizontal bar containing some animation that
+> conveys a sense of motion. While some progress devices indicate an approximate
+> or specific percentage of completion, the MDL progress component simply
+> communicates the fact that an activity is ongoing and is not yet complete.
+
+> Progress indicators are an established but non-standardized feature in user
+> interfaces, and provide users with a visual clue to an application's status.
+> Their design and use is therefore an important factor in the overall user
+> experience. See the progress component's Material Design specifications page for
+> details.
 """
 
 
 srcUrl : String
 srcUrl =
-  "https://github.com/debois/elm-mdl/blob/master/demo/Demo/TEMPLATE.elm"
+  "https://github.com/debois/elm-mdl/blob/master/demo/Demo/ProgressBar.elm"
 
 
 references : List (String, String)
 references =
-  [ Page.package "http://package.elm-lang.org/packages/debois/elm-mdl/latest/Material-TEMPLATE"
-  , Page.mds "https://www.google.com/design/spec/components/TEMPLATE.html"
-  , Page.mdl "https://www.getmdl.io/components/index.html#TEMPLATE"
+  [ Page.package "http://package.elm-lang.org/packages/debois/elm-mdl/latest/Material-ProgressBar"
+  , Page.mds "https://www.google.com/design/spec/components/progress-activity.html"
+  , Page.mdl "https://getmdl.io/components/index.html#loading-section/progress"
   ]
