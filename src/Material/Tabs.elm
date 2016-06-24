@@ -42,7 +42,6 @@ import Json.Decode as Json
 -}
 type alias Model =
   { ripples : Dict Int Ripple.Model
-  , activeTab : Int
   }
 
 
@@ -51,9 +50,7 @@ type alias Model =
 defaultModel : Model
 defaultModel =
   { ripples = Dict.empty
-  , activeTab = 0
   }
-
 
 
 -- ACTION, UPDATE
@@ -62,9 +59,7 @@ defaultModel =
 {-| Component action.
 -}
 type Msg
-  = Select Int
-  | Test
-  | MultiClick (List Msg)
+  = NoOp
   | Ripple Int Ripple.Msg
 
 
@@ -74,32 +69,17 @@ type Msg
 update : Msg -> Model -> ( Model, Cmd Msg )
 update action model =
   case action of
-    Test ->
-      (Debug.log "TEST" model, none)
+    NoOp ->
+      (model, none)
 
-    Select idx ->
-      ( { model | activeTab = Debug.log "SELECT" idx }, none )
-
-    MultiClick handlers ->
-      let
-        _  = Debug.log "MULTI" handlers
-
-
-        updated =
-          handlers
-            |> List.foldl (\ val acc -> fst <| update val acc) model
-
-      in
-        (updated, none)
-
-    Ripple idx action' ->
+    Ripple tabIdx action' ->
       let
         ( ripple', cmd ) =
-          Dict.get idx model.ripples
+          Dict.get tabIdx model.ripples
             |> Maybe.withDefault Ripple.model
             |> Ripple.update action'
       in
-        ( { model | ripples = Dict.insert idx ripple' model.ripples }, Cmd.map (Ripple idx) cmd )
+        ( { model | ripples = Dict.insert tabIdx ripple' model.ripples }, Cmd.map (Ripple tabIdx) cmd )
 
 
 
@@ -141,8 +121,8 @@ type TabLink m
 
 type Tab m
   = Tab
-      { panel : Panel m
-      , link : TabLink m
+      { link : TabLink m
+      , panel : Panel m
       }
 
 
@@ -159,10 +139,6 @@ panel styles content =
 link : List (Property m) -> List (Html m) -> TabLink m
 link styles content =
   TabLink { styles = styles, content = content }
-
-
-
-{- See src/Material/Button.elm for an example of, e.g., an onClick handler. -}
 
 
 ripple : Property m
@@ -183,23 +159,6 @@ selectTab : Int -> Property m
 selectTab tab =
   Options.set (\config -> { config | activeTab = tab })
 
---onClick : (a -> m) -> Property m
-
-
-onClick lift =
-  Internal.attribute <| Html.onClick lift
-
-
-onMaybeClick : m -> m -> Property m
-onMaybeClick lift maybe =
-  Options.many
-    [ Internal.attribute <| Html.on "click" (Json.succeed lift `Json.andThen` (\_ -> Json.succeed maybe))
-    --, Internal.attribute <| Html.on "click" (Json.succeed maybe)
-    ]
-
-
-onMultiClick lift handlers =
-  Internal.attribute <| Html.onClick ((MultiClick handlers) |> lift)
 
 {-| Component view.
 -}
@@ -212,44 +171,21 @@ view lift model options tabs =
     config =
       summary.config
 
-    unwrapPanel idx (Panel { styles, content }) =
+    unwrapPanel tabIdx (Panel { styles, content }) =
       Options.styled Html.div
         ([ cs "mdl-tabs__panel"
-         , cs "is-active" `when` (idx == config.activeTab)
+         , cs "is-active" `when` (tabIdx == config.activeTab)
          ] ++ styles)
         content
 
-    -- test idx =
-    --   config.onSelectTab
-    --     |> Maybe.map (\h -> idx |> h |> Select  |> lift)
-
-    unwrapLink idx (TabLink { styles, content }) =
+    unwrapLink tabIdx (TabLink { styles, content }) =
       Options.styled Html.a
-        [ cs "mdl-tabs__tab"
-        , cs "is-active" `when` (idx == config.activeTab)
-        --, onMultiClick lift [Test, Select idx]
-        --, onClick ()
+        ([ cs "mdl-tabs__tab"
+        , cs "is-active" `when` (tabIdx == config.activeTab)
         , config.onSelectTab
-          |> Maybe.map (\t -> onClick (t idx))
-          |>  Maybe.withDefault Options.nop
-        -- , onClick (lift Test)
-        -- , onClick (lift <| Select idx)
-        --, onMaybeClick (lift <| Select idx) (lift Test)
-        -- , Options.many
-        --   [ --onClick (lift <| Select idx)
-        --       --Options.nop
-        --   onClick (lift <| Select idx)
-        --   , onClick (lift Test)
-        --   -- , config.onSelectTab
-        --   --   |> Maybe.map (\ val -> Internal.attribute (val idx))
-        --   --   |> Maybe.withDefault Options.nop
-        --   ]
-        ]
-        -- [
-        --  --Just (Html.onClick (lift <| Select idx))
-        -- -- , config.onSelectTab
-        -- --   |> Maybe.map ((|>) idx)
-        -- ]
+          |> Maybe.map (\t -> Internal.attribute <| Html.onClick (t tabIdx))
+          |> Maybe.withDefault Options.nop
+        ] ++ styles)
         (if config.ripple then
           List.concat
             [ content
@@ -259,18 +195,18 @@ view lift model options tabs =
                       , ( "mdl-tabs__ripple-js-effect", True )
                       ]
                   ]
-                  (Dict.get idx model.ripples
+                  (Dict.get tabIdx model.ripples
                     |> Maybe.withDefault Ripple.model
                   )
-                  |> Html.App.map (Ripple idx >> lift)
+                  |> Html.App.map (Ripple tabIdx >> lift)
               ]
             ]
          else
           content
         )
 
-    unwrapTab idx (Tab { panel, link }) =
-      ( unwrapPanel idx panel, unwrapLink idx link )
+    unwrapTab tabIdx (Tab { panel, link }) =
+      ( unwrapPanel tabIdx panel, unwrapLink tabIdx link )
 
     tabs' =
       List.indexedMap unwrapTab tabs
@@ -292,12 +228,6 @@ view lift model options tabs =
       , cs "mdl-js-ripple-effect--ignore-events" `when` config.ripple
       ]
       []
-      -- [ Just <|
-      --     ( config.onSelectTab
-      --     |> Maybe.map (\s -> Html.onClick (s 0))
-      --     |> Maybe.withDefault Helpers.noAttr
-      --     )
-      -- ]
       (links :: panels)
 
 
