@@ -61,8 +61,8 @@ view model  =
       , Tabs.selectTab model.tab
       ]
       [ Tabs.tab
-          { link =
-              Tabs.link
+          { label =
+              Tabs.label
               []
               [text "Example"]
 
@@ -81,8 +81,8 @@ view model  =
                            ]
 
                            [ Tabs.tab
-                           { link = Tabs.link [] [text "Tab One"]
-                           , panel = Tabs.panel [] [text "Tab One content"]
+                           { label = Tabs.label [] [text "Tab One"]
+                           , content = Tabs.content [] [text "Tab One content"]
                            }
                            ]
 
@@ -90,8 +90,8 @@ view model  =
               ]
           }
       , Tabs.tab
-        { link =
-            Tabs.link
+        { label =
+            Tabs.label
             []
             [text "About tabs"]
 

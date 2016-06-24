@@ -112,8 +112,8 @@ type Content m
       }
 
 
-type TabLink m
-  = TabLink
+type Label m
+  = Label
       { styles : List (Property m)
       , content : List (Html m)
       }
@@ -121,12 +121,12 @@ type TabLink m
 
 type Tab m
   = Tab
-      { link : TabLink m
+      { label : Label m
       , content : Content m
       }
 
 
-tab : { content : Content m, link : TabLink m } -> Tab m
+tab : { content : Content m, label : Label m } -> Tab m
 tab =
   Tab
 
@@ -136,9 +136,9 @@ content styles content =
   Content { styles = styles, content = content }
 
 
-link : List (Property m) -> List (Html m) -> TabLink m
-link styles content =
-  TabLink { styles = styles, content = content }
+label : List (Property m) -> List (Html m) -> Label m
+label styles content =
+  Label { styles = styles, content = content }
 
 
 ripple : Property m
@@ -178,7 +178,7 @@ view lift model options tabs =
          ] ++ styles)
         content
 
-    unwrapLink tabIdx (TabLink { styles, content }) =
+    unwrapLink tabIdx (Label { styles, content }) =
       Options.styled Html.a
         ([ cs "mdl-tabs__tab"
         , cs "is-active" `when` (tabIdx == config.activeTab)
@@ -205,8 +205,8 @@ view lift model options tabs =
           content
         )
 
-    unwrapTab tabIdx (Tab { content, link }) =
-      ( unwrapPanel tabIdx content, unwrapLink tabIdx link )
+    unwrapTab tabIdx (Tab { content, label }) =
+      ( unwrapPanel tabIdx content, unwrapLink tabIdx label )
 
     tabs' =
       List.indexedMap unwrapTab tabs
