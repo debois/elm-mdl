@@ -19,12 +19,14 @@ type alias Mdl =
 
 type alias Model =
   { mdl : Material.Model
+  , tab : Int
   }
 
 
 model : Model
 model =
   { mdl = Material.model
+  , tab = 0
   }
 
 
@@ -32,15 +34,18 @@ model =
 
 
 type Msg
-  = TemplateMsg
+  = SelectTab Int
   | Mdl Material.Msg
 
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update action model =
   case action of
-    TemplateMsg ->
-      (model, Cmd.none)
+    SelectTab idx ->
+      let
+        _ = Debug.log "SELECTED" idx
+      in
+        ({ model | tab = idx }, Cmd.none)
 
     Mdl action' ->
       Material.update Mdl action' model
@@ -54,28 +59,38 @@ view model  =
   [ div
       []
       [ Tabs.render Mdl [0] model.mdl
-          [ Tabs.ripple ]
+          [ Tabs.ripple
+          , Tabs.onSelectTab SelectTab
+          , Tabs.selectTab model.tab
+          ]
           [ Tabs.tab
-             { panel = Tabs.panel [] [text "Tab One Content"]
-             , link = Tabs.link [] [text "Tab One"]
+             { link =
+                 Tabs.link
+                 []
+                 [text "Tab One"]
+
+             , panel =
+                 Tabs.panel
+                   []
+                   [text "Tab One Content"]
              }
           , Tabs.tab
-             { panel = Tabs.panel [] [text "Tab One Two"]
-             , link = Tabs.link [] [text "Tab Two"]
+             { link =
+                 Tabs.link
+                   []
+                   [text "Tab Two"]
+
+             , panel =
+                 Tabs.panel
+                   []
+                   [text "Tab One Two"]
              }
 
           ]
-          -- [ Tabs.tabBar []
-          --     [ Tabs.tabLink [Tabs.active] [text "Tab One"]
-          --     , Tabs.tabLink [] [text "Tab Two"]
-          --     ]
-          -- , Tabs.panel [Tabs.active]
-          --   [text "Panel 1"]
-
-          -- , Tabs.panel []
-          --   [text "Panel 2"]
-          -- ]
       ]
+  , div
+      [ style [("margin-top", "60px")]]
+      []
   ]
   |> Page.body2 "TEMPLATE" srcUrl intro references
 
