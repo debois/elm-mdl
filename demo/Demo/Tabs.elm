@@ -6,6 +6,7 @@ import Html.Attributes exposing (..)
 
 import Material.Tabs as Tabs
 import Material
+import Material.Options as Options
 
 import Demo.Page as Page
 
@@ -67,23 +68,32 @@ view model  =
              { link =
                  Tabs.link
                  []
-                 [text "Tab One"]
+                 [text "About tabs"]
 
              , panel =
                  Tabs.panel
                    []
-                   [text "Tab One Content"]
+                   [ p []
+                       [ b [] [text "Tab"]
+                       , text " component is pretty cool."
+                       ]
+                   , p []
+                       [ text """The Material Design Lite (MDL) tab component is a user interface element that allows different content blocks to share the same screen space in a mutually exclusive manner. Tabs are always presented in sets of two or more, and they make it easy to explore and switch among different views or functional aspects of an app, or to browse categorized data sets individually. Tabs serve as "headings" for their respective content; the active tab — the one whose content is currently displayed — is always visually distinguished from the others so the user knows which heading the current content belongs to."""
+                       ]
+                   ]
              }
+
           , Tabs.tab
              { link =
                  Tabs.link
                    []
-                   [text "Tab Two"]
+                   [text "Example"]
 
              , panel =
                  Tabs.panel
                    []
-                   [text "Tab One Two"]
+                   [
+                   ]
              }
 
           ]
