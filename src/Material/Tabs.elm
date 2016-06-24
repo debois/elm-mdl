@@ -105,8 +105,8 @@ type alias Property m =
   Options.Property (Config m) m
 
 
-type Panel m
-  = Panel
+type Content m
+  = Content
       { styles : List (Property m)
       , content : List (Html m)
       }
@@ -122,18 +122,18 @@ type TabLink m
 type Tab m
   = Tab
       { link : TabLink m
-      , panel : Panel m
+      , content : Content m
       }
 
 
-tab : { panel : Panel m, link : TabLink m } -> Tab m
+tab : { content : Content m, link : TabLink m } -> Tab m
 tab =
   Tab
 
 
-panel : List (Property m) -> List (Html m) -> Panel m
-panel styles content =
-  Panel { styles = styles, content = content }
+content : List (Property m) -> List (Html m) -> Content m
+content styles content =
+  Content { styles = styles, content = content }
 
 
 link : List (Property m) -> List (Html m) -> TabLink m
@@ -171,7 +171,7 @@ view lift model options tabs =
     config =
       summary.config
 
-    unwrapPanel tabIdx (Panel { styles, content }) =
+    unwrapPanel tabIdx (Content { styles, content }) =
       Options.styled Html.div
         ([ cs "mdl-tabs__panel"
          , cs "is-active" `when` (tabIdx == config.activeTab)
@@ -205,8 +205,8 @@ view lift model options tabs =
           content
         )
 
-    unwrapTab tabIdx (Tab { panel, link }) =
-      ( unwrapPanel tabIdx panel, unwrapLink tabIdx link )
+    unwrapTab tabIdx (Tab { content, link }) =
+      ( unwrapPanel tabIdx content, unwrapLink tabIdx link )
 
     tabs' =
       List.indexedMap unwrapTab tabs
