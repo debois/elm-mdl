@@ -119,24 +119,38 @@ view model  =
       [ style [("margin-top", "60px")]]
       []
   ]
-  |> Page.body2 "TEMPLATE" srcUrl intro references
+  |> Page.body2 "Tabs" srcUrl intro references
 
 
 intro : Html m
 intro =
-  Page.fromMDL "https://www.getmdl.io/components/index.html#TEMPLATE-section" """
-> ...
+  Page.fromMDL "https://getmdl.io/components/index.html#layout-section/tabs" """
+> The Material Design Lite (MDL) tab component is a user interface element that
+> allows different content blocks to share the same screen space in a mutually
+> exclusive manner. Tabs are always presented in sets of two or more, and they
+> make it easy to explore and switch among different views or functional aspects
+> of an app, or to browse categorized data sets individually. Tabs serve as
+> "headings" for their respective content; the active tab — the one whose content
+> is currently displayed — is always visually distinguished from the others so the
+> user knows which heading the current content belongs to.
+>
+> Tabs are an established but non-standardized feature in user interfaces, and
+> allow users to view different, but often related, blocks of content (often
+> called panels). Tabs save screen real estate and provide intuitive and logical
+> access to data while reducing navigation and associated user confusion. Their
+> design and use is an important factor in the overall user experience. See the
+> tab component's Material Design specifications page for details.
 """
 
 
 srcUrl : String
 srcUrl =
-  "https://github.com/debois/elm-mdl/blob/master/demo/Demo/TEMPLATE.elm"
+  "https://github.com/debois/elm-mdl/blob/master/demo/Demo/Tabs.elm"
 
 
 references : List (String, String)
 references =
-  [ Page.package "http://package.elm-lang.org/packages/debois/elm-mdl/latest/Material-TEMPLATE"
-  , Page.mds "https://www.google.com/design/spec/components/TEMPLATE.html"
-  , Page.mdl "https://www.getmdl.io/components/index.html#TEMPLATE"
+  [ Page.package "http://package.elm-lang.org/packages/debois/elm-mdl/latest/Material-Tabs"
+  , Page.mds "https://material.google.com/components/tabs.html"
+  , Page.mdl "https://getmdl.io/components/index.html#layout-section/tabs"
   ]
