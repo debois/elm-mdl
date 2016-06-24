@@ -101,7 +101,7 @@ view model  =
 
         , content =
             Tabs.content
-              []
+              [ Options.css "padding-bottom" "85px" ]
               [ p []
                   [ text """The Material Design Lite (MDL) tab component is a user interface element that allows different content blocks to share the same screen space in a mutually exclusive manner. Tabs are always presented in sets of two or more, and they make it easy to explore and switch among different views or functional aspects of an app, or to browse categorized data sets individually. Tabs serve as "headings" for their respective content; the active tab — the one whose content is currently displayed — is always visually distinguished from the others so the user knows which heading the current content belongs to."""
                   ]
@@ -112,9 +112,6 @@ view model  =
 
 
       ]
-  , div
-      [ style [("margin-top", "60px")]]
-      []
   ] |> Page.body2 "Tabs" srcUrl intro references
 
 
