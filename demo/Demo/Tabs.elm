@@ -63,47 +63,51 @@ view model  =
       [ Tabs.tab
           { label =
               Tabs.label
-              []
-              [text "Example"]
+                []
+                [text "Example"]
 
           , content =
-            Tabs.content
-              []
-              [ Code.code """
-                           import Material.Tabs as Tabs
+              Tabs.content
+                []
+                [ Code.code """
+                            import Material.Tabs as Tabs
 
-                           tabs : Model -> Html Msg
-                           tabs model =
-                           Tabs.render Mdl [0] model.mdl
-                           [ Tabs.ripple
-                           , Tabs.onSelectTab SelectTab
-                           , Tabs.selectTab model.tab
-                           ]
+                            tabs : Model -> Html Msg
+                            tabs model =
+                              Tabs.render Mdl [0] model.mdl
+                                  [ Tabs.ripple
+                                  , Tabs.onSelectTab SelectTab
+                                  , Tabs.selectTab model.tab
+                                  ]
+                                  [ Tabs.tab
+                                      { label = Tabs.label [] [text "Tab One"]
+                                      , content = Tabs.content [] [text "Tab One content"]
+                                      }
 
-                           [ Tabs.tab
-                           { label = Tabs.label [] [text "Tab One"]
-                           , content = Tabs.content [] [text "Tab One content"]
-                           }
-                           ]
+                                  , Tabs.tab
+                                      { label = Tabs.label [] [text "Tab Two"]
+                                      , content = Tabs.content [] [text "Tab Two content"]
+                                      }
+                                  ]
 
-                           """
-              ]
+                            """
+                ]
           }
       , Tabs.tab
         { label =
             Tabs.label
-            []
-            [text "About tabs"]
+              []
+              [text "About tabs"]
 
         , content =
-          Tabs.content
-            []
-            [ p []
-                [ text """The Material Design Lite (MDL) tab component is a user interface element that allows different content blocks to share the same screen space in a mutually exclusive manner. Tabs are always presented in sets of two or more, and they make it easy to explore and switch among different views or functional aspects of an app, or to browse categorized data sets individually. Tabs serve as "headings" for their respective content; the active tab — the one whose content is currently displayed — is always visually distinguished from the others so the user knows which heading the current content belongs to."""
-                ]
-            , p []
-              [text """Tabs are an established but non-standardized feature in user interfaces, and allow users to view different, but often related, blocks of content (often called panels). Tabs save screen real estate and provide intuitive and logical access to data while reducing navigation and associated user confusion. Their design and use is an important factor in the overall user experience. See the tab component's Material Design specifications page for details."""]
-            ]
+            Tabs.content
+              []
+              [ p []
+                  [ text """The Material Design Lite (MDL) tab component is a user interface element that allows different content blocks to share the same screen space in a mutually exclusive manner. Tabs are always presented in sets of two or more, and they make it easy to explore and switch among different views or functional aspects of an app, or to browse categorized data sets individually. Tabs serve as "headings" for their respective content; the active tab — the one whose content is currently displayed — is always visually distinguished from the others so the user knows which heading the current content belongs to."""
+                  ]
+              , p []
+                [text """Tabs are an established but non-standardized feature in user interfaces, and allow users to view different, but often related, blocks of content (often called panels). Tabs save screen real estate and provide intuitive and logical access to data while reducing navigation and associated user confusion. Their design and use is an important factor in the overall user experience. See the tab component's Material Design specifications page for details."""]
+              ]
         }
 
 

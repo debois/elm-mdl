@@ -1,38 +1,90 @@
-module Material.Tabs exposing (..)
+module Material.Tabs
+  exposing
+    ( Tab
+    , Content
+    , Label
+    , Property
+    , Msg
+    , TabContent
+    , render
+    , update
+    , view
+    , tab
+    , label
+    , content
+    , ripple
+    , onSelectTab
+    , selectTab
+    , Model
+    , defaultModel
+    )
 
-{-| From the [Material Design Lite documentation](http://www.getmdl.io/components/#TEMPLATE-section):
+{-| From the [Material Design Lite documentation](https://getmdl.io/components/index.html#layout-section/tabs):
 
-> ...
+> The Material Design Lite (MDL) tab component is a user interface element that
+> allows different content blocks to share the same screen space in a mutually
+> exclusive manner. Tabs are always presented in sets of two or more, and they
+> make it easy to explore and switch among different views or functional aspects
+> of an app, or to browse categorized data sets individually. Tabs serve as
+> "headings" for their respective content; the active tab — the one whose content
+> is currently displayed — is always visually distinguished from the others so the
+> user knows which heading the current content belongs to.
+>
+> Tabs are an established but non-standardized feature in user interfaces, and
+> allow users to view different, but often related, blocks of content (often
+> called panels). Tabs save screen real estate and provide intuitive and logical
+> access to data while reducing navigation and associated user confusion. Their
+> design and use is an important factor in the overall user experience. See the
+> tab component's Material Design specifications page for details.
 
 See also the
-[Material Design Specification]([https://www.google.com/design/spec/components/TEMPLATE.html).
+[Material Design Specification](https://material.google.com/components/tabs.html#tabs-usage).
 
-Refer to [this site](http://debois.github.io/elm-mdl#/template)
+Refer to [this site](http://debois.github.io/elm-mdl#/tabs)
 for a live demo.
 
-@docs Model, model, Msg, update
+# Types
+@docs TabContent, Tab, Content, Label
+@docs Property
+
+# Render
+
+@docs render
+
+
+# Events
+
+@docs onSelectTab, selectTab
+
+# Appearance
+
+
+@docs ripple
+
+# Content
+
+@docs tab, content, label
+
+
+# Elm architecture
+
+@docs Model, defaultModel
+@docs Msg
+@docs update
 @docs view
 
-# Component support
-
-@docs Container, Observer, Instance, instance, fwdTemplate
 -}
-
--- TEMPLATE. Copy this to a file for your component, then update.
 
 import Platform.Cmd exposing (Cmd, none)
 import Html exposing (Html)
 import Parts exposing (Indexed)
 import Material.Options as Options exposing (cs, when)
 import Material.Options.Internal as Internal
-import Material.Helpers as Helpers
 import Material.Ripple as Ripple
 import Html.App
 import Html.Attributes as Html exposing (class)
 import Html.Events as Html
 import Dict exposing (Dict)
-
-import Json.Decode as Json
 
 
 -- MODEL
@@ -53,6 +105,7 @@ defaultModel =
   }
 
 
+
 -- ACTION, UPDATE
 
 
@@ -63,14 +116,13 @@ type Msg
   | Ripple Int Ripple.Msg
 
 
-
 {-| Component update.
 -}
 update : Msg -> Model -> ( Model, Cmd Msg )
 update action model =
   case action of
     NoOp ->
-      (model, none)
+      ( model, none )
 
     Ripple tabIdx action' ->
       let
@@ -101,10 +153,14 @@ defaultConfig =
   }
 
 
+{-| Tab options.
+-}
 type alias Property m =
   Options.Property (Config m) m
 
 
+{-| Opaque `Content` type
+-}
 type Content m
   = Content
       { styles : List (Property m)
@@ -112,6 +168,8 @@ type Content m
       }
 
 
+{-| Opaque `Label` type
+-}
 type Label m
   = Label
       { styles : List (Property m)
@@ -119,28 +177,43 @@ type Label m
       }
 
 
+{-| Opaque `Tab` type
+-}
 type Tab m
-  = Tab
-      { label : Label m
-      , content : Content m
-      }
+  = Tab (TabContent m)
 
 
-tab : { content : Content m, label : Label m } -> Tab m
+{-| Tab description
+-}
+type alias TabContent m =
+  { content : Content m
+  , label : Label m
+  }
+
+
+{-| Create a tab with `content` and `label`
+-}
+tab : TabContent m -> Tab m
 tab =
   Tab
 
 
+{-| Create tab `content`
+-}
 content : List (Property m) -> List (Html m) -> Content m
 content styles content =
   Content { styles = styles, content = content }
 
 
+{-| Create tab `label`
+-}
 label : List (Property m) -> List (Html m) -> Label m
 label styles content =
   Label { styles = styles, content = content }
 
 
+{-| Make tabs ripple when clicked.
+-}
 ripple : Property m
 ripple =
   Options.set (\options -> { options | ripple = True })
@@ -149,15 +222,15 @@ ripple =
 {-| Receieve notification when tab `k` is selected.
 -}
 onSelectTab : (Int -> m) -> Property m
-onSelectTab f =
-  Options.set (\config -> { config | onSelectTab = Just (f) })
+onSelectTab k =
+  Options.set (\config -> { config | onSelectTab = Just k })
 
 
-{-| Receieve notification when tab `k` is selected.
+{-| Set the selected tab.
 -}
 selectTab : Int -> Property m
-selectTab tab =
-  Options.set (\config -> { config | activeTab = tab })
+selectTab k =
+  Options.set (\config -> { config | activeTab = k })
 
 
 {-| Component view.
@@ -175,17 +248,21 @@ view lift model options tabs =
       Options.styled Html.div
         ([ cs "mdl-tabs__panel"
          , cs "is-active" `when` (tabIdx == config.activeTab)
-         ] ++ styles)
+         ]
+          ++ styles
+        )
         content
 
     unwrapLink tabIdx (Label { styles, content }) =
       Options.styled Html.a
         ([ cs "mdl-tabs__tab"
-        , cs "is-active" `when` (tabIdx == config.activeTab)
-        , config.onSelectTab
-          |> Maybe.map (\t -> Internal.attribute <| Html.onClick (t tabIdx))
-          |> Maybe.withDefault Options.nop
-        ] ++ styles)
+         , cs "is-active" `when` (tabIdx == config.activeTab)
+         , config.onSelectTab
+            |> Maybe.map (\t -> Internal.attribute <| Html.onClick (t tabIdx))
+            |> Maybe.withDefault Options.nop
+         ]
+          ++ styles
+        )
         (if config.ripple then
           List.concat
             [ content
