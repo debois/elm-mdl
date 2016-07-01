@@ -111,9 +111,7 @@ defaultModel =
 
 {-| Component action.
 -}
-type Msg
-  = NoOp
-  | Ripple Int Ripple.Msg
+type Msg = Ripple Int Ripple.Msg
 
 
 {-| Component update.
@@ -121,9 +119,6 @@ type Msg
 update : Msg -> Model -> ( Model, Cmd Msg )
 update action model =
   case action of
-    NoOp ->
-      ( model, none )
-
     Ripple tabIdx action' ->
       let
         ( ripple', cmd ) =
