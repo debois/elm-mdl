@@ -1,23 +1,18 @@
 module Material.Tabs
-  exposing (..)
-    -- ( Tab
-    -- , Content
-    -- , Label
-    -- , Property
-    -- , Msg
-    -- , TabContent
-    -- , render
-    -- , update
-    -- , view
-    -- , tab
-    -- , label
-    -- , content
-    -- , ripple
-    -- , onSelectTab
-    -- , selectTab
-    -- , Model
-    -- , defaultModel
-    -- )
+  exposing
+    ( Label
+    , Property
+    , Msg
+    , render
+    , update
+    , view
+    , label
+    , ripple
+    , onSelectTab
+    , selectTab
+    , Model
+    , defaultModel
+    )
 
 {-| From the [Material Design Lite documentation](https://getmdl.io/components/index.html#layout-section/tabs):
 
@@ -44,7 +39,7 @@ Refer to [this site](http://debois.github.io/elm-mdl#/tabs)
 for a live demo.
 
 # Types
-@docs TabContent, Tab, Content, Label
+@docs Label
 @docs Property
 
 # Render
@@ -56,14 +51,15 @@ for a live demo.
 
 @docs onSelectTab, selectTab
 
-# Appearance
 
+# Appearance
 
 @docs ripple
 
+
 # Content
 
-@docs tab, content, label
+@docs label
 
 
 # Elm architecture
@@ -111,7 +107,8 @@ defaultModel =
 
 {-| Component action.
 -}
-type Msg = Ripple Int Ripple.Msg
+type Msg
+  = Ripple Int Ripple.Msg
 
 
 {-| Component update.
@@ -156,13 +153,15 @@ type alias Property m =
 
 {-| Opaque `Label` type
 -}
-type Label m = Label (List (Property m), List (Html m))
+type Label m
+  = Label ( List (Property m), List (Html m) )
 
 
 {-| Create tab `label`
 -}
 label : List (Property m) -> List (Html m) -> Label m
-label p c = Label (p, c)
+label p c =
+  Label ( p, c )
 
 
 {-| Make tabs ripple when clicked.
@@ -205,14 +204,15 @@ view lift model options tabs tabContent =
         , cs "is-active"
         ]
 
-    unwrapLabel tabIdx (Label (props, content)) =
+    unwrapLabel tabIdx (Label ( props, content )) =
       Options.styled Html.a
         ([ cs "mdl-tabs__tab"
          , cs "is-active" `when` (tabIdx == config.activeTab)
          , config.onSelectTab
-         |> Maybe.map (\t -> Internal.attribute <| Html.onClick (t tabIdx))
-         |> Maybe.withDefault Options.nop
-         ] ++ props
+            |> Maybe.map (\t -> Internal.attribute <| Html.onClick (t tabIdx))
+            |> Maybe.withDefault Options.nop
+         ]
+          ++ props
         )
         (if config.ripple then
           List.concat
@@ -233,7 +233,6 @@ view lift model options tabs tabContent =
           content
         )
 
-
     links =
       Options.styled Html.div
         [ cs "mdl-tabs__tab-bar"
@@ -252,8 +251,6 @@ view lift model options tabs tabContent =
       (links :: (wrapContent tabContent) :: [])
 
 
-{-| Component view.
--}
 
 -- COMPONENT
 
@@ -274,5 +271,3 @@ render :
   -> Html m
 render =
   Parts.create view update .tabs (\x y -> { y | tabs = x }) defaultModel
-
-{- See src/Material/Layout.mdl for how to add subscriptions. -}
