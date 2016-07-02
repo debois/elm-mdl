@@ -1,23 +1,23 @@
 module Material.Tabs
-  exposing
-    ( Tab
-    , Content
-    , Label
-    , Property
-    , Msg
-    , TabContent
-    , render
-    , update
-    , view
-    , tab
-    , label
-    , content
-    , ripple
-    , onSelectTab
-    , selectTab
-    , Model
-    , defaultModel
-    )
+  exposing (..)
+    -- ( Tab
+    -- , Content
+    -- , Label
+    -- , Property
+    -- , Msg
+    -- , TabContent
+    -- , render
+    -- , update
+    -- , view
+    -- , tab
+    -- , label
+    -- , content
+    -- , ripple
+    -- , onSelectTab
+    -- , selectTab
+    -- , Model
+    -- , defaultModel
+    -- )
 
 {-| From the [Material Design Lite documentation](https://getmdl.io/components/index.html#layout-section/tabs):
 
@@ -154,57 +154,15 @@ type alias Property m =
   Options.Property (Config m) m
 
 
-{-| Opaque `Content` type
--}
-type Content m
-  = Content
-      { styles : List (Property m)
-      , content : List (Html m)
-      }
-
-
 {-| Opaque `Label` type
 -}
-type Label m
-  = Label
-      { styles : List (Property m)
-      , content : List (Html m)
-      }
-
-
-{-| Opaque `Tab` type
--}
-type Tab m
-  = Tab (TabContent m)
-
-
-{-| Tab description
--}
-type alias TabContent m =
-  { content : Content m
-  , label : Label m
-  }
-
-
-{-| Create a tab with `content` and `label`
--}
-tab : TabContent m -> Tab m
-tab =
-  Tab
-
-
-{-| Create tab `content`
--}
-content : List (Property m) -> List (Html m) -> Content m
-content styles content =
-  Content { styles = styles, content = content }
+type Label m = Label (List (Property m), List (Html m))
 
 
 {-| Create tab `label`
 -}
 label : List (Property m) -> List (Html m) -> Label m
-label styles content =
-  Label { styles = styles, content = content }
+label p c = Label (p, c)
 
 
 {-| Make tabs ripple when clicked.
@@ -230,8 +188,8 @@ selectTab k =
 
 {-| Component view.
 -}
-view : (Msg -> m) -> Model -> List (Property m) -> List (Tab m) -> Html m
-view lift model options tabs =
+view : (Msg -> m) -> Model -> List (Property m) -> List (Label m) -> List (Html m) -> Html m
+view lift model options tabs tabContent =
   let
     summary =
       Options.collect defaultConfig options
@@ -239,24 +197,22 @@ view lift model options tabs =
     config =
       summary.config
 
-    unwrapPanel tabIdx (Content { styles, content }) =
+    -- Wraps the tab content into a proper tab panel
+    -- Always active because the visible tab is always active.
+    wrapContent =
       Options.styled Html.div
-        ([ cs "mdl-tabs__panel"
-         , cs "is-active" `when` (tabIdx == config.activeTab)
-         ]
-          ++ styles
-        )
-        content
+        [ cs "mdl-tabs__panel"
+        , cs "is-active"
+        ]
 
-    unwrapLink tabIdx (Label { styles, content }) =
+    unwrapLabel tabIdx (Label (props, content)) =
       Options.styled Html.a
         ([ cs "mdl-tabs__tab"
          , cs "is-active" `when` (tabIdx == config.activeTab)
          , config.onSelectTab
-            |> Maybe.map (\t -> Internal.attribute <| Html.onClick (t tabIdx))
-            |> Maybe.withDefault Options.nop
-         ]
-          ++ styles
+         |> Maybe.map (\t -> Internal.attribute <| Html.onClick (t tabIdx))
+         |> Maybe.withDefault Options.nop
+         ] ++ props
         )
         (if config.ripple then
           List.concat
@@ -277,19 +233,12 @@ view lift model options tabs =
           content
         )
 
-    unwrapTab tabIdx (Tab { content, label }) =
-      ( unwrapPanel tabIdx content, unwrapLink tabIdx label )
-
-    tabs' =
-      List.indexedMap unwrapTab tabs
-
-    ( panels, links' ) =
-      List.unzip tabs'
 
     links =
       Options.styled Html.div
-        (cs "mdl-tabs__tab-bar" :: [])
-        links'
+        [ cs "mdl-tabs__tab-bar"
+        ]
+        (List.indexedMap unwrapLabel tabs)
   in
     Options.apply summary
       Html.div
@@ -300,9 +249,11 @@ view lift model options tabs =
       , cs "mdl-js-ripple-effect--ignore-events" `when` config.ripple
       ]
       []
-      (links :: panels)
+      (links :: (wrapContent tabContent) :: [])
 
 
+{-| Component view.
+-}
 
 -- COMPONENT
 
@@ -318,11 +269,10 @@ render :
   -> Parts.Index
   -> Container c
   -> List (Property m)
-  -> List (Tab m)
+  -> List (Label m)
+  -> List (Html m)
   -> Html m
 render =
   Parts.create view update .tabs (\x y -> { y | tabs = x }) defaultModel
-
-
 
 {- See src/Material/Layout.mdl for how to add subscriptions. -}
