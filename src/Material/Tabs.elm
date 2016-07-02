@@ -7,6 +7,7 @@ module Material.Tabs
     , update
     , view
     , label
+    , textLabel
     , ripple
     , onSelectTab
     , selectTab
@@ -60,6 +61,7 @@ for a live demo.
 # Content
 
 @docs label
+@docs textLabel
 
 
 # Elm architecture
@@ -162,6 +164,15 @@ type Label m
 label : List (Property m) -> List (Html m) -> Label m
 label p c =
   Label ( p, c )
+
+
+{-| Create tab `label` with simple text.
+Most often the labels are just text so this is a
+utility function to help create labels with just text.
+-}
+textLabel : List (Property m) -> String -> Label m
+textLabel p c =
+  label p [ Html.text c ]
 
 
 {-| Make tabs ripple when clicked.

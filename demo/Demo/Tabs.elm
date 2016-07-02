@@ -55,7 +55,7 @@ update action model =
 aboutTab : Html Msg
 aboutTab =
   Html.div
-    [ Html.style [("height", "430px")] ]
+    [ Html.style [("height", "380px")] ]
     [ p []
         [ text """The Material Design Lite (MDL) tab component is a user interface element that allows different content blocks to share the same screen space in a mutually exclusive manner. Tabs are always presented in sets of two or more, and they make it easy to explore and switch among different views or functional aspects of an app, or to browse categorized data sets individually. Tabs serve as "headings" for their respective content; the active tab — the one whose content is currently displayed — is always visually distinguished from the others so the user knows which heading the current content belongs to."""
         ]
@@ -67,7 +67,7 @@ aboutTab =
 extraTab : Html Msg
 extraTab =
   Html.div
-    [ Html.style [("height", "430px")] ]
+    [ Html.style [("height", "380px")] ]
     [ p []
         [ text "Tabs enable content organization at a high level, such as switching between views, data sets, or functional aspects of an app."
         ]
@@ -89,15 +89,13 @@ exampleTab =
            , Tabs.onSelectTab SelectTab
            , Tabs.selectTab model.tab
            ]
-           [ Tabs.tab
-               { label = Tabs.label [] [text "Tab One"]
-               , content = Tabs.content [] [text "Tab One content"]
-               }
-
-           , Tabs.tab
-               { label = Tabs.label [] [text "Tab Two"]
-               , content = Tabs.content [] [text "Tab Two content"]
-               }
+           [ Tabs.label [] [text "Tab One"]
+           , Tabs.textLabel [] "Tab Two"
+           ]
+           [ case model.tab of
+               0 -> div [] [text "Content of tab one"]
+               1 -> div [] [text "Content of tab two"]
+               _ -> div [] []
            ]
 
      """
@@ -106,8 +104,6 @@ exampleTab =
 view : Model -> Html Msg
 view model  =
   let
-    _ = []
-
     activeContent =
       case model.tab of
         0 -> exampleTab
@@ -121,8 +117,8 @@ view model  =
         , Tabs.selectTab model.tab
         ]
         [ Tabs.label [] [text "Example"]
-        , Tabs.label [] [text "About tabs"]
-        , Tabs.label [] [text "Extra"]
+        , Tabs.label [] [text "About ", strong [] [text "Tabs"]]
+        , Tabs.textLabel [] "Extra"
         ]
         [ activeContent
         ]
