@@ -87,7 +87,7 @@ exampleTab =
        Tabs.render Mdl [0] model.mdl
            [ Tabs.ripple
            , Tabs.onSelectTab SelectTab
-           , Tabs.selectTab model.tab
+           , Tabs.activeTab model.tab
            ]
            [ Tabs.label [] [text "Tab One"]
            , Tabs.textLabel [] "Tab Two"
@@ -114,7 +114,7 @@ view model  =
     [ Tabs.render Mdl [0] model.mdl
         [ Tabs.ripple
         , Tabs.onSelectTab SelectTab
-        , Tabs.selectTab model.tab
+        , Tabs.activeTab model.tab
         ]
         [ Tabs.label [] [text "Example"]
         , Tabs.label [] [text "About ", strong [] [text "Tabs"]]

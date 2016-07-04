@@ -10,7 +10,7 @@ module Material.Tabs
     , textLabel
     , ripple
     , onSelectTab
-    , selectTab
+    , activeTab
     , Model
     , defaultModel
     )
@@ -50,7 +50,7 @@ for a live demo.
 
 # Events
 
-@docs onSelectTab, selectTab
+@docs onSelectTab, activeTab
 
 
 # Appearance
@@ -189,10 +189,10 @@ onSelectTab k =
   Options.set (\config -> { config | onSelectTab = Just k })
 
 
-{-| Set the selected tab.
+{-| Set the active tab.
 -}
-selectTab : Int -> Property m
-selectTab k =
+activeTab : Int -> Property m
+activeTab k =
   Options.set (\config -> { config | activeTab = k })
 
 
