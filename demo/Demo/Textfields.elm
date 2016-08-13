@@ -258,7 +258,7 @@ textfields model =
        """
     )
 
-  , ( "Multi-line textfield with character limit"
+  , ( "Multi-line textfield with character limit (focused: " ++ (toString model.focus5) ++ ")"
     , Html.div []
     [ Textfield.render MDL [8] model.mdl
         [ Textfield.label ("Multiline textfield (" ++
@@ -300,6 +300,8 @@ textfields model =
          , Textfield.maxlength (truncate model.length)
          , Textfield.autofocus
          , Textfield.floatingLabel
+         , Textfield.onFocus (SetFocus5 True)
+         , Textfield.onBlur (SetFocus5 False)
          ]
        """
     )

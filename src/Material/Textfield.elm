@@ -78,6 +78,8 @@ import Platform.Cmd
 import Parts exposing (Indexed)
 
 import Material.Options as Options exposing (cs, css, nop, Style)
+import Material.Helpers as Helpers
+import Dict exposing (Dict)
 
 
 -- OPTIONS
@@ -100,7 +102,7 @@ type alias Config m =
   , autofocus : Bool
   , maxlength : Maybe Int
   , style : List (Options.Style m)
-  , listeners : List (Html.Attribute m)
+  , listeners : Dict String (Decoder.Decoder m)
   }
 
 
@@ -117,7 +119,7 @@ defaultConfig =
   , autofocus = False
   , maxlength = Nothing
   , style = []
-  , listeners = []
+  , listeners = Dict.empty
   }
 
 
@@ -189,7 +191,8 @@ on event decoder =
     Options.set
       (\config ->
          { config |
-             listeners = config.listeners ++ [(Html.Events.on event decoder)]})
+             listeners = Dict.insert event decoder config.listeners })
+
 
 {-| Message to dispatch on input
 -}
@@ -282,25 +285,39 @@ defaultModel =
 
 {-| Component actions. `Input` carries the new value of the field.
 -}
-type Msg
-  = Blur
-  | Focus
+type Msg m
+  = Blur (Maybe m)
+  | Focus (Maybe m)
   | Input String
 
 
 {-| Component update.
 -}
-update : Msg -> Model -> Model
+update : Msg msg -> Model -> (Model, Cmd msg)
 update action model =
   case action of
     Input str -> 
-      { model | value = str }
+      ({ model | value = str }, Cmd.none)
       
-    Blur ->
-      { model | isFocused = False }
+    Blur msg ->
+      let
+        model' =
+          { model | isFocused = False }
+        cmds =
+          List.filterMap identity
+            [ msg |> Maybe.map Helpers.cmd ]
+      in
+        (model', Cmd.batch cmds)
 
-    Focus ->
-      { model | isFocused = True }
+    Focus msg ->
+      let
+        model' =
+          { model | isFocused = True }
+        cmds =
+          List.filterMap identity
+            [ msg |> Maybe.map Helpers.cmd ]
+      in
+        (model', Cmd.batch cmds)
 
 
 -- VIEW
@@ -313,7 +330,7 @@ of the textfield's implementation, and so is mostly useful for positioning
 (e.g., `margin: 0 auto;` or `align-self: flex-end`). See `Textfield.style`
 if you need to apply styling to the underlying `<input>` element. 
 -}
-view : (Msg -> m) -> Model -> List (Property m) -> Html m
+view : (Msg m -> m) -> Model -> List (Property m) -> Html m
 view lift model options =
   let 
     ({ config } as summary) = 
@@ -349,8 +366,20 @@ view lift model options =
         Nothing -> []
 
 
+    -- These events require special handling because they do not bubble
+    -- Meaning our event handlers for these events have to be on the input-element as well
+    specialEvents =
+      ["blur", "focus"]
+
+    (special, rest) =
+      Dict.partition
+        (\ evtName _ -> List.member evtName specialEvents )
+        config.listeners
+
     listeners =
-      config.listeners
+      rest
+        |> Dict.map (\evt decoder -> Html.Events.on evt decoder)
+        |> Dict.values
 
     textValue =
       case config.value of
@@ -366,6 +395,21 @@ view lift model options =
         Nothing ->
           Just <| Html.Events.on "input" (Decoder.map (Input >> lift) targetValue)
 
+
+    specialDecoder evtName =
+      case Dict.get evtName special of
+        Just s -> Decoder.maybe s
+        Nothing -> Decoder.succeed Nothing
+
+
+    blurAndFocus =
+      [ Html.Events.on "focus"
+          (Decoder.map (Focus >> lift) (specialDecoder "focus"))
+      , Html.Events.on "blur"
+          (Decoder.map (Blur >> lift) (specialDecoder "blur"))
+      ]
+
+
   in
     Options.apply summary div
       [ cs "mdl-textfield"
@@ -378,9 +422,7 @@ view lift model options =
       , if config.disabled then cs "is-disabled" else nop
       ]
       ( List.filterMap identity 
-          ([ Just <| Html.Events.on "focusin" (Decoder.succeed (lift Focus))
-           , Just <| Html.Events.on "focusout" (Decoder.succeed (lift Blur))
-           , defaultInput
+          ([ defaultInput
            ])
       )
       [ Options.styled' elementFunction
@@ -390,7 +432,7 @@ view lift model options =
           ]
           ([ Html.Attributes.disabled config.disabled 
            , Html.Attributes.autofocus config.autofocus
-           ] ++ textValue ++ typeAttributes ++ maxlength ++ listeners)
+           ] ++ textValue ++ typeAttributes ++ maxlength ++ listeners ++ blurAndFocus)
           []
       , Html.label 
           [class "mdl-textfield__label"]  
@@ -432,7 +474,7 @@ render
   -> Html m
 render =
   Parts.create 
-    view (\_ msg model -> Just (update msg model, Cmd.none))
-    .textfield (\x c -> { c | textfield = x }) 
+    view (\_ msg model -> Just <| update msg model)
+    .textfield (\x c -> { c | textfield = x })
     defaultModel
 
