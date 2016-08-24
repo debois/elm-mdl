@@ -6,6 +6,7 @@ module Material.Button exposing
   , onClick
   , Property
   , render
+  , link
   )
 
 {-| From the [Material Design Lite documentation](http://www.getmdl.io/components/#buttons-section):
@@ -46,6 +47,7 @@ for a live demo.
   
 ## Events
 @docs onClick
+@docs link
 
 ## Type 
 Refer to the
@@ -105,6 +107,7 @@ update action =
   Ripple.update action
 
 
+
 -- VIEW
 
 
@@ -112,6 +115,7 @@ type alias Config m =
   { ripple : Bool 
   , onClick : Maybe (Attribute m)
   , disabled : Bool
+  , linkOptions : List (Attribute m)
   }
 
 
@@ -120,6 +124,7 @@ defaultConfig =
   { ripple = False
   , onClick = Nothing
   , disabled = False
+  , linkOptions = []
   }
  
 
@@ -143,6 +148,26 @@ ripple : Property m
 ripple = 
   Options.set
     (\options -> { options | ripple = True })
+
+
+{-| Add link-attributes that turn the button from `button` into a `a`-element.
+This allows for links that look and feel like buttons but perform link actions.
+
+    Button.render ...
+      [ ...
+      , Button.link
+          [ Html.Attributes.href "#some-link"
+          , Html.Attributes.target "_blank"
+          ]
+      ]
+      [ ... ]
+
+**NOTE** An empty list keeps the element as `button`
+-}
+link : List (Attribute m) -> Property m
+link opts =
+  Options.set
+    (\options -> { options | linkOptions = opts ++ options.linkOptions})
 
 
 {-| Set button to "disabled".
@@ -210,6 +235,7 @@ view : (Msg -> m) -> Model -> List (Property m) -> List (Html m) -> Html m
 view lift model config html =
   let 
     summary = Options.collect defaultConfig config
+    cfg = summary.config
 
     startListeners = 
       if summary.config.ripple then 
@@ -234,14 +260,23 @@ view lift model config html =
           Just (Html.Attributes.disabled True) 
         else 
           Nothing
-      ] 
+      ]
+
+    linkOptions =
+      List.map Just cfg.linkOptions
+
+    buttonElement =
+      case cfg.linkOptions of
+        [] -> Html.button
+        _  -> Html.a
+
   in
-    Options.apply summary button 
+    Options.apply summary buttonElement
       [ cs "mdl-button"
       , cs "mdl-js-button" 
       , cs "mdl-js-ripple-effect" `when` summary.config.ripple 
       ]
-      (List.concat [startListeners, stopListeners, misc]
+      (List.concat [startListeners, stopListeners, misc, linkOptions]
          |> List.filterMap identity)
       (if summary.config.ripple then
           List.concat 
