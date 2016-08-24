@@ -6,6 +6,9 @@ module Material.Button exposing
   , onClick
   , Property
   , render
+  , LinkProperty, LinkProp
+  , link
+  , href, target, download, downloadAs, hreflang, media, ping, rel
   )
 
 {-| From the [Material Design Lite documentation](http://www.getmdl.io/components/#buttons-section):
@@ -53,6 +56,11 @@ Refer to the
 for details about what type of buttons are appropriate for which situations.
 @docs flat, raised, fab, minifab, icon
 
+# Link Buttons
+@docs LinkProperty, LinkProp
+@docs link
+@docs href, target, download, downloadAs, hreflang, media, ping, rel
+
 # Elm architecture
 @docs Model, defaultModel, Msg, update, view
 
@@ -71,13 +79,89 @@ import Parts exposing (Indexed, Index)
 import Material.Helpers as Helpers
 import Material.Options as Options exposing (cs, when)
 import Material.Ripple as Ripple
+import Material.Options.Internal as Internal
+
+
+
+{-| Opaque link property type
+-}
+type LinkProp = LinkProp
+
+
+{-| Link properties
+-}
+type alias LinkProperty m =
+  Options.Property LinkProp m
+
+
+{-| Specifies the URL of the page the link goes to
+-}
+href : String -> LinkProperty m
+href =
+  Html.Attributes.href >> Internal.attribute
+
+
+{-| Specifies where to open the linked document.
+Possible values:
+
+  * _blank &mdash; a new window or tab
+  * _self &mdash; the same frame (this is default)
+  * _parent &mdash; the parent frame
+  * _top &mdash; the full body of the window
+
+-}
+target : String -> LinkProperty m
+target =
+  Html.Attributes.target >> Internal.attribute
+
+
+{-| Specifies that the target will be downloaded when a user clicks on the link
+-}
+download: Bool -> LinkProperty m
+download =
+  Html.Attributes.download >> Internal.attribute
+
+
+{-| Indicates that clicking the link will download the resource
+directly, and that the downloaded resource with have the given filename.
+-}
+downloadAs: String -> LinkProperty m
+downloadAs =
+  Html.Attributes.downloadAs >> Internal.attribute
+
+
+{-| Specifies the language of the linked document
+-}
+hreflang: String -> LinkProperty m
+hreflang =
+  Html.Attributes.hreflang >> Internal.attribute
+
+
+{-| Specifies what media/device the linked document is optimized for
+-}
+media: String -> LinkProperty m
+media =
+  Html.Attributes.media >> Internal.attribute
+
+
+{-| Specify a URL to send a short POST request to when the user clicks on the link
+-}
+ping: String -> LinkProperty m
+ping =
+  Html.Attributes.ping >> Internal.attribute
+
+
+{-| Specifies the relationship between the current document and the linked document
+-}
+rel: String -> LinkProperty m
+rel =
+  Html.Attributes.rel >> Internal.attribute
 
 
 
 -- MODEL
 
-
-{-| 
+{-|
 -}
 type alias Model = Ripple.Model
 
@@ -105,6 +189,7 @@ update action =
   Ripple.update action
 
 
+
 -- VIEW
 
 
@@ -112,6 +197,7 @@ type alias Config m =
   { ripple : Bool 
   , onClick : Maybe (Attribute m)
   , disabled : Bool
+  , linkOptions : List (LinkProperty m)
   }
 
 
@@ -120,6 +206,7 @@ defaultConfig =
   { ripple = False
   , onClick = Nothing
   , disabled = False
+  , linkOptions = []
   }
  
 
@@ -143,6 +230,26 @@ ripple : Property m
 ripple = 
   Options.set
     (\options -> { options | ripple = True })
+
+
+{-| Add link-attributes that turn the button from `button` into a `a`-element.
+This allows for links that look and feel like buttons but perform link actions.
+
+    Button.render ...
+      [ ...
+      , Button.link
+          [ Button.href "#some-link"
+          , Button.target "_blank"
+          ]
+      ]
+      [ ... ]
+
+**NOTE** An empty list keeps the element as `button`
+-}
+link : List (LinkProperty m) -> Property m
+link opts =
+  Options.set
+    (\options -> { options | linkOptions = opts ++ options.linkOptions})
 
 
 {-| Set button to "disabled".
@@ -210,6 +317,7 @@ view : (Msg -> m) -> Model -> List (Property m) -> List (Html m) -> Html m
 view lift model config html =
   let 
     summary = Options.collect defaultConfig config
+    cfg = summary.config
 
     startListeners = 
       if summary.config.ripple then 
@@ -234,14 +342,26 @@ view lift model config html =
           Just (Html.Attributes.disabled True) 
         else 
           Nothing
-      ] 
+      ]
+
+
+    linkSummary = Options.collect LinkProp cfg.linkOptions
+
+    linkOptions =
+      List.map Just linkSummary.attrs
+
+    buttonElement =
+      case cfg.linkOptions of
+        [] -> Html.button
+        _  -> Html.a
+
   in
-    Options.apply summary button 
+    Options.apply summary buttonElement
       [ cs "mdl-button"
       , cs "mdl-js-button" 
       , cs "mdl-js-ripple-effect" `when` summary.config.ripple 
       ]
-      (List.concat [startListeners, stopListeners, misc]
+      (List.concat [startListeners, stopListeners, misc, linkOptions]
          |> List.filterMap identity)
       (if summary.config.ripple then
           List.concat 
