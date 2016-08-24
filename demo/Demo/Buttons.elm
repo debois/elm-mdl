@@ -242,7 +242,7 @@ view model =
     , Button.render Mdl [9, 0, 0, 1] model.mdl
         [ Button.ripple
         , Button.link
-            [ Html.Attributes.href "#buttons"
+            [ Button.href "#buttons"
             ]
         ]
         [ text "Basic Link" ]
@@ -252,7 +252,7 @@ view model =
       Button.render Mdl [9, 0, 0, 1] model.mdl
         [ Button.ripple
         , Button.link
-            [ Html.Attributes.href "#buttons"
+            [ Button.href "#buttons"
             ]
         ]
         [ text "Basic Link" ]
@@ -263,8 +263,8 @@ view model =
         , Button.colored
         , Button.raised
         , Button.link
-            [ Html.Attributes.href "https://github.com/debois/elm-mdl/"
-            , Html.Attributes.target "_blank"
+            [ Button.href "https://github.com/debois/elm-mdl/"
+            , Button.target "_blank"
             ]
         ]
         [ text "View Source" ]
@@ -275,8 +275,8 @@ view model =
         , Button.colored
         , Button.raised
         , Button.link
-            [ Html.Attributes.href "https://github.com/debois/elm-mdl/"
-            , Html.Attributes.target "_blank"
+            [ Button.href "https://github.com/debois/elm-mdl/"
+            , Button.target "_blank"
             ]
         ]
         [ text "View Source" ]
