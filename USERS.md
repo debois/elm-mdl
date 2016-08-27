@@ -38,6 +38,8 @@
 * Elm-BMI - BMI Calculator written in Elm.
     * [GitHub repository](https://github.com/uehaj/elm-bmi)
     * [Live demo/site](https://uehaj.github.io/elm-bmi/)
+* Offtie.com - Project allows to save urls to read later without data connection or in AirPlane Mode.
+    * [Live site](https://offtie.com/)
 
 
 *Disclaimer - elm-mdl does not endorse or suggest that these projects are "best practice". They are only listed here as a reference.*
