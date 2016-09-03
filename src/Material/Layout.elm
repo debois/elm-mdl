@@ -46,7 +46,7 @@ sizes. Example initialisation of containing app:
     import Material.Layout as Layout
     import Material
 
-    type Model = 
+    type alias Model = 
       { ...
       , mdl : Material.Model -- Boilerplate
       }
