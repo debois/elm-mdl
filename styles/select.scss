@@ -1,0 +1,391 @@
+@import "../material-design-lite/src/variables";
+@import "../material-design-lite/src/mixins";
+
+.mdl-select {
+  position: relative;
+}
+
+// RIPPLE
+.mdl-select .mdl-select__trigger {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: $input-text-vertical-spacing;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.mdl-select .mdl-select__trigger {
+  display: none; }
+
+.mdl-select.mdl-js-ripple-effect .mdl-select__trigger {
+  display: block; }
+
+// ICON
+.mdl-select .material-icons {
+  position: absolute;
+  top: $input-text-vertical-spacing;
+  right: 0;
+  pointer-events: none;
+}
+
+// MENU
+.mdl-select .mdl-menu__container {
+  display: block;
+  margin: 0;
+  padding: 0;
+  border: none;
+  position: absolute;
+  overflow: visible;
+  height: 0;
+  width: 0;
+  visibility: hidden;
+  z-index: -1;
+  top: 0;
+  right: 0;
+
+  &.is-visible {
+    z-index: 999;
+    visibility: visible;
+  }
+}
+
+.mdl-select .mdl-menu__outline {
+  display: block;
+  background: $default-dropdown-bg-color;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 2px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: scale(0);
+  transform-origin: 0 0;
+  @include shadow-2dp();
+  will-change: transform;
+  transition: transform $menu-expand-duration $animation-curve-default,
+      opacity $menu-fade-duration $animation-curve-default;
+  z-index: -1;
+
+  .mdl-menu__container.is-visible & {
+    opacity: 1;
+    transform: scale(1);
+    z-index: 999;
+  }
+}
+
+.mdl-select .mdl-menu {
+  position: absolute;
+  list-style: none;
+  top: 0;
+  left: 0;
+  height: auto;
+  width: auto;
+  min-width: 124px;
+  padding: 8px 0;
+  margin: 0;
+  opacity: 0;
+  clip: rect(0 0 0 0);
+  z-index: -1;
+
+  .mdl-menu__container.is-visible & {
+    opacity: 1;
+    z-index: 999;
+  }
+
+  &.is-visible {
+    transition: opacity $menu-fade-duration $animation-curve-default,
+        clip $menu-expand-duration $animation-curve-default;
+  }
+
+  left: auto;
+  right: 0;
+}
+
+.mdl-select .mdl-menu__item {
+  display: block;
+  border: none;
+  color: $default-item-text-color;
+  background-color: transparent;
+  text-align: left;
+  margin: 0;
+  padding: 0 16px;
+  outline-color: $default-item-outline-color;
+  position: relative;
+  overflow: hidden;
+  @include typo-body-1();
+  text-decoration: none;
+  cursor: pointer;
+  height: 48px;
+  line-height: 48px;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity $menu-fade-duration $animation-curve-default;
+  user-select: none;
+
+  .mdl-menu__container.is-visible & {
+    opacity: 1;
+  }
+
+  &::-moz-focus-inner {
+    border: 0;
+  }
+
+  &--full-bleed-divider {
+    border-bottom: 1px solid $default-item-divider-color;
+  }
+
+  &[disabled], &[data-mdl-disabled] {
+    color: $disabled-item-text-color;
+    background-color: transparent;
+    cursor: auto;
+
+    &:hover {
+      background-color: transparent;
+    }
+
+    &:focus {
+      background-color: transparent;
+    }
+
+    & .mdl-ripple {
+      background: transparent;
+    }
+  }
+
+  &.mdl-menu__item--selected,
+  &:hover {
+    background-color: $default-item-hover-bg-color;
+  }
+
+  &:focus {
+    outline: none;
+    background-color: $default-item-focus-bg-color;
+  }
+
+  &:active {
+    background-color: $default-item-active-bg-color;
+  }
+}
+
+.mdl-select .mdl-menu__item--ripple-container {
+  display: block;
+  height: 100%;
+  left: 0px;
+  position: absolute;
+  top: 0px;
+  width: 100%;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.mdl-select .mdl-menu__item--selected {
+  background-color: #f00;
+}
+
+// TEXTFIELD
+.mdl-select {
+  // The container for the whole component.
+  position: relative;
+  font-size: $input-text-font-size;
+  display: inline-block;
+  box-sizing: border-box;
+  width: 300px;
+  max-width: 100%;
+  margin: 0;
+  padding: $input-text-vertical-spacing 0;
+
+  // Align buttons, if used.
+  & .mdl-button {
+    position: absolute;
+    bottom: $input-text-vertical-spacing;
+  }
+
+  // Optional class to align right.
+  .mdl-select--align-right {
+    text-align: right;
+  }
+
+  // Optional class to display at full width.
+  .mdl-select--full-width {
+    width: 100%;
+  }
+
+  // Optional class to make the text field expandable.
+  .mdl-select--expandable {
+    min-width: $input-text-button-size;
+    width: auto;
+    min-height: $input-text-button-size;
+    
+    // Align icon button
+    .mdl-button--icon {
+      top: $input-text-expandable-icon-top;
+    }
+  }
+}
+
+// Styling for the input element.
+.mdl-select__input {
+  border: none;
+  border-bottom: 1px solid $input-text-bottom-border-color;
+  display: block;
+  font-size: $input-text-font-size;
+  font-family: $performance_font;
+  margin: 0;
+  padding: $input-text-padding 0;
+  width: $input-text-width;
+  background: none;
+  text-align: left;
+  color: inherit;
+  cursor: pointer;
+
+  &[type="number"] {
+    -moz-appearance: textfield;
+  }
+
+  &[type="number"]::-webkit-inner-spin-button,
+  &[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .mdl-select.is-focused & {
+    outline: none;
+  }
+
+  .mdl-select.is-invalid & {
+    border-color: $input-text-error-color;
+    box-shadow: none;
+  }
+
+  fieldset[disabled] .mdl-select &,
+  .mdl-select.is-disabled & {
+    background-color: transparent;
+    border-bottom: 1px dotted $input-text-disabled-color;
+    color: $input-text-disabled-text-color;
+  }
+}
+
+// Styling for the label / floating label.
+.mdl-select__label {
+  bottom: 0;
+  color: $input-text-label-color;
+  font-size: $input-text-font-size;
+  left: 0;
+  right: 0;
+  pointer-events: none;
+  position: absolute;
+  display: block;
+  top: ($input-text-padding + $input-text-vertical-spacing);
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-align: left;
+
+  .mdl-select.is-dirty &,
+  .mdl-select.has-placeholder & {
+    visibility: hidden;
+  }
+
+  // Floating Label
+  .mdl-select--floating-label & {
+    @include material-animation-default();
+  }
+
+  .mdl-select--floating-label.has-placeholder & {
+    transition: none;
+  }
+
+  fieldset[disabled] .mdl-select &,
+  .mdl-select.is-disabled.is-disabled & {
+    color: $input-text-disabled-text-color;
+  }
+
+  .mdl-select--floating-label.is-focused &,
+  .mdl-select--floating-label.is-dirty &,
+  .mdl-select--floating-label.has-placeholder & {
+    color: $input-text-highlight-color;
+    font-size : $input-text-floating-label-fontsize;
+    top: $input-text-vertical-spacing - ($input-text-floating-label-fontsize + $input-text-padding);
+    visibility: visible;
+  }
+
+  .mdl-select--floating-label.is-focused .mdl-select__expandable-holder &,
+  .mdl-select--floating-label.is-dirty .mdl-select__expandable-holder &,
+  .mdl-select--floating-label.has-placeholder .mdl-select__expandable-holder & {
+    top: -($input-text-floating-label-fontsize + $input-text-padding);
+  }
+
+  .mdl-select--floating-label.is-invalid & {
+    color: $input-text-error-color;
+    //font-size: $input-text-floating-label-fontsize;
+  }
+
+  // The after label is the colored underline for the TextField.
+  &:after {
+    background-color: $input-text-highlight-color;
+    bottom: $input-text-vertical-spacing;
+    content: '';
+    height: 2px;
+    left: 45%;
+    position: absolute;
+    @include material-animation-default();
+    visibility: hidden;
+    width: 10px;
+  }
+
+  .mdl-select.is-focused &:after {
+    left: 0;
+    visibility: visible;
+    width: 100%;
+  }
+
+  .mdl-select.is-invalid &:after {
+    background-color: $input-text-error-color;
+  }
+}
+
+// TextField Error.
+.mdl-select__error {
+  color: $input-text-error-color;
+  position: absolute;
+  font-size: $input-text-floating-label-fontsize;
+  margin-top: 3px;
+  visibility: hidden;
+  display: block;
+
+  .mdl-select.is-invalid & {
+    visibility: visible;
+  }
+}
+
+// Expandable Holder.
+.mdl-select__expandable-holder {
+  display: inline-block;
+  position: relative;
+  margin-left: $input-text-button-size;
+
+  @include material-animation-default();
+  display: inline-block;
+
+  // Safari (possibly others) need to be convinced that this field is actually
+  // visible, otherwise it cannot be tabbed to nor focused via a <label>.
+  // TODO: In some cases (Retina displays), this is big enough to render the
+  // inner element :(
+  max-width: 0.1px;
+
+  .mdl-select.is-focused &, .mdl-select.is-dirty & {
+    // This is an unfortunate hack. Animating between widths in percent (%)
+    // in many browsers (Chrome, Firefox) only animates the inner visual style
+    // of the input - the outer bounding box still 'jumps'.
+    // Thus assume a sensible maximum, and animate to/from that value.
+    max-width: 600px;
+  }
+  .mdl-select__label:after {
+    bottom: 0;
+  }
+}

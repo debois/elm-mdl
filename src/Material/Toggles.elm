@@ -287,7 +287,7 @@ type alias Store s =
 {-| Component react function.
 -}
 react :
-    (Component.Msg button textfield menu layout Msg tooltip tabs dispatch -> m)
+    (Component.Msg button textfield menu layout Msg tooltip tabs select dispatch -> m)
     -> Msg
     -> Index
     -> Store s
@@ -299,7 +299,7 @@ react =
 {-| Component render (checkbox)
 -}
 checkbox :
-    (Component.Msg button textfield menu snackbar Msg tooltip tabs dispatch -> m)
+    (Component.Msg button textfield menu snackbar Msg tooltip tabs select dispatch -> m)
     -> Component.Index
     -> { a | toggles : Indexed Model }
     -> List (Property m)
@@ -312,7 +312,7 @@ checkbox =
 {-| Component render (switch)
 -}
 switch :
-    (Component.Msg button textfield menu snackbar Msg tooltip tabs dispatch -> m)
+    (Component.Msg button textfield menu snackbar Msg tooltip tabs select dispatch -> m)
     -> Component.Index
     -> Store s
     -> List (Property m)
@@ -325,7 +325,7 @@ switch =
 {-| Component render (radio button)
 -}
 radio :
-    (Component.Msg button textfield menu snackbar Msg tooltip tabs dispatch -> m)
+    (Component.Msg button textfield menu snackbar Msg tooltip tabs select dispatch -> m)
     -> Component.Index
     -> Store s
     -> List (Property m)

@@ -2,6 +2,8 @@ module Material.Helpers
     exposing
         ( filter
         , blurOn
+        , fst
+        , snd
         , map1st
         , map2nd
         , delay
@@ -84,6 +86,16 @@ blurOn evt =
 
 
 -- TUPLES
+
+
+fst : (a, b) -> a
+fst ( x, y ) =
+    x
+
+
+snd : (a, b) -> b
+snd ( x, y ) =
+    y
 
 
 {-| Map the first element of a tuple.

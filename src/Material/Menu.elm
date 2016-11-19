@@ -787,7 +787,7 @@ indicated in `Material`, and a user message `Select String`.
       ]
 -}
 render :
-    (Component.Msg button textfield (Msg m) layout toggles tooltip tabs dispatch
+    (Component.Msg button textfield (Msg m) layout toggles tooltip tabs select dispatch
      -> m
     )
     -> Component.Index
@@ -802,7 +802,7 @@ render =
 {-| TODO
 -}
 subs :
-    (Component.Msg button textfield (Msg msg) layout toggles tooltip tabs dispatch
+    (Component.Msg button textfield (Msg msg) layout toggles tooltip tabs select dispatch
      -> msg
     )
     -> Store s

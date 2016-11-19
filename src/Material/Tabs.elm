@@ -289,7 +289,7 @@ type alias Store s =
 {-| Component react function.
 -}
 react :
-    (Component.Msg button textfield menu layout toggles tooltip Msg dispatch -> m)
+    (Component.Msg button textfield menu layout toggles tooltip Msg select dispatch -> m)
     -> Msg 
     -> Index
     -> Store s
@@ -301,7 +301,7 @@ react =
 {-| Component render.
 -}
 render :
-    (Component.Msg button textfield menu snackbar toggles tooltip Msg dispatch -> m)
+    (Component.Msg button textfield menu snackbar toggles tooltip Msg select dispatch -> m)
     -> Component.Index
     -> Store s
     -> List (Property m)

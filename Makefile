@@ -2,8 +2,11 @@ ELM=elm-make --yes
 PAGES=../elm-mdl-gh-pages
 CLOSURE_COMPILER=compiler.jar
 
-demo:
+demo: css
 	(cd demo; $(ELM) Demo.elm --warn --output ../elm.js)
+
+css: styles/select.scss
+	sassc styles/select.scss > styles/select.css
 
 run-demo:
 	(cd demo; pkill elm-reactor; elm-reactor &)
