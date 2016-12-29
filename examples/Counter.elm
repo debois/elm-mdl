@@ -103,12 +103,12 @@ view model =
             [ Options.onClick Increase
             , css "margin" "0 24px"
             ]
-            [ text "Increase" ]
+            [ Options.node "div" [] [ text "Increase" ] ]
         , Button.render Mdl
             [ 1 ]
             model.mdl
             [ Options.onClick Reset ]
-            [ text "Reset" ]
+            [ Options.node "div" [] [ text "Reset" ] ]
         ]
         |> Material.Scheme.top
 
