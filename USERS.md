@@ -9,11 +9,6 @@ the list :)
     * [Live demo/site](http://hydra-frontend.domenkozar.com/)
 * Elephant-guide - Magic: the Gathering deck tuning tool.
     * [GitHub repository](https://github.com/IwalkAlone/elephant-guide)
-* Phoenix-Elm-Chat - Elm and Phoenix Chat Client.
-    * This is a chat application that we build out in episodes on the Elm and Elixir tracks for DailyDrip
-    * [GitHub repository](https://github.com/knewter/phoenix-elm-chat)
-    * [YouTube video](https://www.youtube.com/watch?v=PrUum0BDClE&feature=youtu.be)
-    * [Visit DailyDrip to learn more](https://www.dailydrip.com/)
 * Bloggero-elm-mdl - Bloggero -- engine for static blogs with single page interface.
     * [GitHub repository](https://github.com/easimonenko/bloggero-elm-mdl)
 * Billbored - A billboard to post and share with your friends.
