@@ -9,7 +9,7 @@ import Material.Grid as Grid
 import Material.Options as Options
 import Material.Options exposing (Style)
 import Material.Select as Select
-import Material.Select.Item as Item
+import Material.Dropdown.Item as Item
 import Platform.Cmd exposing (Cmd, none)
 
 
@@ -39,7 +39,7 @@ type Msg
     = Select Int String
     | SelectByIndex Int Int
     | Mdl (Material.Msg Msg)
-    | Focus
+--    | Focus
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -51,8 +51,8 @@ update msg model =
         SelectByIndex index selectedIndex ->
             { model | indices = Dict.insert index selectedIndex model.indices } ! []
 
-        Focus ->
-            Material.update Mdl (Select.closeAll Mdl model.mdl) model
+--        Focus ->
+--            Material.update Mdl (Select.closeAll Mdl model.mdl) model
 
         Mdl msg ->
             Material.update Mdl msg model
@@ -74,7 +74,7 @@ view model =
                 , Select.floatingLabel
                 , Select.ripple
                 , Select.value (Maybe.withDefault "" (Dict.get 0 model.values))
-                , Options.onFocus Focus
+                -- , Options.onFocus Focus
                 ]
                 ([ "allosaurus"
                  , "brontosaurus"
@@ -125,7 +125,7 @@ view model =
                 model.mdl
                 [ Select.label "Dinosaurs"
                 , Select.value (Maybe.withDefault "" (Dict.get 1 model.values))
-                , Options.onFocus Focus
+                -- , Options.onFocus Focus
                 ]
                 ([ "allosaurus"
                  , "brontosaurus"
@@ -191,7 +191,7 @@ view model =
                     [ Select.label "Dinosaurs"
                     , Select.value selectedValue
                     , Select.index index
-                    , Options.onFocus Focus
+                    -- , Options.onFocus Focus
                     ]
                     (values
                         |> List.indexedMap

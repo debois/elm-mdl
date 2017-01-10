@@ -1,11 +1,13 @@
 @import "../material-design-lite/src/variables";
 @import "../material-design-lite/src/mixins";
 
+
 .mdl-select {
   position: relative;
+  display: inline-block;
 }
 
-// RIPPLE
+
 .mdl-select .mdl-select__trigger {
   position: absolute;
   top: 0;
@@ -16,14 +18,77 @@
   cursor: pointer;
 }
 
-.mdl-select .mdl-select__trigger {
-  display: none; }
+.mdl-select .mdl-textfield {
+}
 
-.mdl-select.mdl-js-ripple-effect .mdl-select__trigger {
-  display: block; }
+.mdl-select .mdl-textfield .mdl-textfield__input {
+  cursor: pointer;
+}
+
+.mdl-select .mdl-menu {
+}
+
+.mdl-select .material-icons {
+  position: absolute;
+  top: 21px;
+  right: 0;
+  pointer-events: none;
+}
+
+.mdl-menu__item.mdl-menu__item--selected,
+.mdl-menu__item.mdl-menu__item--selected {
+    background-color: $default-item-hover-bg-color;
+}
+
+/*
+.mdl-select {
+  // The container for the whole component.
+  position: relative;
+  font-size: $input-text-font-size;
+  display: inline-block;
+  box-sizing: border-box;
+  width: 300px;
+  max-width: 100%;
+  margin: 0;
+  padding: 0 0;
+
+  // Align buttons, if used.
+  & .mdl-button {
+    position: absolute;
+    bottom: $input-text-vertical-spacing;
+  }
+
+  // Optional class to align right.
+  .mdl-select--align-right {
+    text-align: right;
+  }
+
+  // Optional class to display at full width.
+  .mdl-select--full-width {
+    width: 100%;
+  }
+
+  // Optional class to make the text field expandable.
+  .mdl-select--expandable {
+    min-width: $input-text-button-size;
+    width: auto;
+    min-height: $input-text-button-size;
+    
+    // Align icon button
+    .mdl-button--icon {
+      top: $input-text-expandable-icon-top;
+    }
+  }
+}
+
+
+// RIPPLE
+.mdl-select__trigger {
+}
 
 // ICON
-.mdl-select .material-icons {
+// TODO
+.material-icons {
   position: absolute;
   top: $input-text-vertical-spacing;
   right: 0;
@@ -31,7 +96,7 @@
 }
 
 // MENU
-.mdl-select .mdl-menu__container {
+.mdl-menu__container {
   display: block;
   margin: 0;
   padding: 0;
@@ -51,7 +116,7 @@
   }
 }
 
-.mdl-select .mdl-menu__outline {
+.mdl-menu__outline {
   display: block;
   background: $default-dropdown-bg-color;
   margin: 0;
@@ -78,7 +143,7 @@
   }
 }
 
-.mdl-select .mdl-menu {
+.mdl-menu {
   position: absolute;
   list-style: none;
   top: 0;
@@ -106,7 +171,7 @@
   right: 0;
 }
 
-.mdl-select .mdl-menu__item {
+.mdl-menu__item {
   display: block;
   border: none;
   color: $default-item-text-color;
@@ -157,7 +222,6 @@
     }
   }
 
-  &.mdl-menu__item--selected,
   &:hover {
     background-color: $default-item-hover-bg-color;
   }
@@ -172,7 +236,7 @@
   }
 }
 
-.mdl-select .mdl-menu__item--ripple-container {
+.mdl-menu__item--ripple-container {
   display: block;
   height: 100%;
   left: 0px;
@@ -183,51 +247,6 @@
   overflow: hidden;
 }
 
-.mdl-select .mdl-menu__item--selected {
-  background-color: #f00;
-}
-
-// TEXTFIELD
-.mdl-select {
-  // The container for the whole component.
-  position: relative;
-  font-size: $input-text-font-size;
-  display: inline-block;
-  box-sizing: border-box;
-  width: 300px;
-  max-width: 100%;
-  margin: 0;
-  padding: $input-text-vertical-spacing 0;
-
-  // Align buttons, if used.
-  & .mdl-button {
-    position: absolute;
-    bottom: $input-text-vertical-spacing;
-  }
-
-  // Optional class to align right.
-  .mdl-select--align-right {
-    text-align: right;
-  }
-
-  // Optional class to display at full width.
-  .mdl-select--full-width {
-    width: 100%;
-  }
-
-  // Optional class to make the text field expandable.
-  .mdl-select--expandable {
-    min-width: $input-text-button-size;
-    width: auto;
-    min-height: $input-text-button-size;
-    
-    // Align icon button
-    .mdl-button--icon {
-      top: $input-text-expandable-icon-top;
-    }
-  }
-}
-
 // Styling for the input element.
 .mdl-select__input {
   border: none;
@@ -235,7 +254,8 @@
   display: block;
   font-size: $input-text-font-size;
   font-family: $performance_font;
-  margin: 0;
+  margin-top: $input-text-vertical-spacing;
+  margin-bottom: $input-text-vertical-spacing;
   padding: $input-text-padding 0;
   width: $input-text-width;
   background: none;
@@ -389,3 +409,4 @@
     bottom: 0;
   }
 }
+*/

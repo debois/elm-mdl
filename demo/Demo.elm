@@ -228,7 +228,8 @@ update msg model =
 tabs : List ( String, String, Model -> Html Msg )
 tabs =
     [ ( "Buttons", "buttons", .buttons >> Demo.Buttons.view >> Html.map ButtonsMsg )
-    , ("Select", "select", .select >> Demo.Select.view >> Html.map SelectMsg)
+    , ( "Select", "select", .select >> Demo.Select.view >> Html.map SelectMsg)
+    , ( "Menus", "menus", .menus >> Demo.Menus.view >> Html.map MenusMsg )
     , ( "Badges", "badges", .badges >> Demo.Badges.view >> Html.map BadgesMsg )
     , ( "Cards", "cards", .cards >> Demo.Cards.view >> Html.map CardsMsg )
     , ( "Chips", "chips", .chips >> Demo.Chips.view >> Html.map ChipMsg )
@@ -239,7 +240,6 @@ tabs =
     , ( "Layout", "layout", .layout >> Demo.Layout.view >> Html.map LayoutMsg )
     , ( "Lists", "lists", .lists >> Demo.Lists.view >> Html.map ListsMsg )
     , ( "Loading", "loading", .loading >> Demo.Loading.view >> Html.map LoadingMsg )
-    , ( "Menus", "menus", .menus >> Demo.Menus.view >> Html.map MenusMsg )
     , ( "Sliders", "sliders", .slider >> Demo.Slider.view >> Html.map SliderMsg )
     , ( "Snackbar", "snackbar", .snackbar >> Demo.Snackbar.view >> Html.map SnackbarMsg )
     , ( "Tables", "tables", .tables >> Demo.Tables.view >> Html.map TablesMsg )
