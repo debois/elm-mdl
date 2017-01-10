@@ -30,7 +30,7 @@ find some of them useful.
 @docs pure, effect, delay, cmd, cssTransitionStep
 
 # Tuples
-@docs map1st, map2nd
+@docs fst, snd, map1st, map2nd
 
 # Elm architecture
 @docs Update, Update_, lift, lift_

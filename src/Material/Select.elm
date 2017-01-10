@@ -5,7 +5,9 @@ module Material.Select
         , Msg
         , update
         , view
-        , subscriptions
+        , render
+        , react
+
         , Property
         , ripple
         , value
@@ -13,15 +15,68 @@ module Material.Select
         , disabled
         , label
         , error
-        , onFocus
-        , onBlur
-        , closeAll
         , floatingLabel
         , index
-        , react
-        , render
+        , subscriptions
         , subs
+        , closeAll
         )
+
+{-| Refer to [this site](https://debois/github.io/elm-mdl/#select)
+for a live demo.
+
+# Subscriptions
+
+The select component requires subscriptions to arbitrary mouse clicks to be set
+up. Example initialisation of containing app:
+
+    import Material.Select as Select
+    import Material
+
+    type Model =
+        { mdl : Material.Model -- Boilerplate
+        }
+    type Msg =
+        …
+        | Mdl Material.Msg -- Boilerplate
+    …
+
+    App.program
+        { init = init
+        , view = view
+        , subscriptions = Select.subs Mdl model
+        , update = update
+        }
+
+
+# Behavior
+
+The select component closes itself on pressing TAB. It does not close
+automatically if focus another component by other means, ie. clicking.
+
+If you want select components to close if another element receives focus, you
+will have to listen to that element's focus event and call
+`Material.Select.closeAll` from your program.
+
+# Import
+
+Along with this module you will probably want to import Material.Select.Item.
+
+# Render
+@docs render, subs
+
+# Options
+@docs Property
+
+# Items
+@docs item
+
+# Appearance
+@docs value, label, floatingLabel, error, disabled, index
+
+# Appearance
+@docs ripple
+-}
 
 import Dict exposing (Dict)
 import DOM exposing (Rectangle)
@@ -31,8 +86,6 @@ import Html exposing (..)
 import Html.Keyed
 import Json.Decode as Json exposing (Decoder)
 import Json.Encode exposing (string, int)
-import Mouse
-import String
 import Material.Component as Component exposing (Indexed, Index)
 import Material.Helpers as Helpers exposing (fst, snd, pure, map1st)
 import Material.Icon as Icon
@@ -40,6 +93,8 @@ import Material.Options as Options exposing (Style, cs, css, styled, styled_, wh
 import Material.Options.Internal as Internal
 import Material.Ripple as Ripple
 import Material.Select.Item as Item
+import Mouse
+import String
 
 
 {-| Component subscriptions.
@@ -50,7 +105,6 @@ subscriptions model =
         Mouse.clicks Click
     else
         Sub.none
-
 
 
 -- MODEL
@@ -76,6 +130,22 @@ defaultModel =
     , index = Nothing
     }
 
+
+-- ITEM
+
+
+{-| Construct an menu item.
+-}
+item :
+    List (Item.Property m)
+    -> List (Html m)
+    -> Item.Model m
+item =
+    (,)
+
+
+-- Note: Other functions in Material.Select.Item, because most of them share
+-- names.
 
 
 -- ACTION, UPDATE
@@ -289,81 +359,66 @@ defaultConfig =
     }
 
 
-{-| Type of Menu options
+{-| Type of Select options
 -}
 type alias Property m =
     Options.Property (Config m) m
 
 
+{-| Select highlights the `n`-th item (0-based).
+-}
 index : Int -> Property m
 index v =
     Internal.option (\config -> { config | index = Just v })
 
 
+{-| Select shows `s` as the selected value.
+-}
 value : String -> Property m
 value v =
     Internal.option (\config -> { config | value = v })
 
 
-{-| Menu items ripple when clicked
+{-| Select itself ripples when clicked
 -}
 ripple : Property m
 ripple =
     Internal.option (\config -> { config | ripple = True })
 
 
+{-| Label of the Select
+-}
 label : String -> Property m
 label str =
     Internal.option (\config -> { config | labelText = Just str })
 
 
+{-| Label of select animates away from the input area on input
+-}
 floatingLabel : Property m
 floatingLabel =
     Internal.option (\config -> { config | labelFloat = True })
 
 
+{-| Error message
+-}
 error : String -> Property m
 error str =
     Internal.option (\config -> { config | error = Just str })
 
 
+{-| Disable the Select input
+-}
 disabled : Property m
 disabled =
     Internal.option (\config -> { config | disabled = True })
 
 
+{-| Specifies tha the select should automatically get focus when the page loads
+-}
 autofocus : Property m
 autofocus =
     Internal.option (\config -> { config | autofocus = True })
-
-
-on : String -> (Maybe Int -> Decoder m) -> Property m
-on event decoder =
-    Internal.option
-        (\config ->
-            { config | listeners = config.listeners ++ [ Html.on event << decoder ] }
-        )
-
-
-onFocus : m -> Property m
-onFocus f =
-    on "focusin" (Json.succeed << always f)
-
-
-onBlur : (Maybe Int -> m) -> Property m
-onBlur f =
-    on "focusout" (Json.succeed << f)
-
-
-{-| Construct a menu item.
--}
-item :
-    List (Item.Property m)
-    -> List (Html m)
-    -> Item.Model m
-item =
-    (,)
-
 
 
 -- VIEW
@@ -509,8 +564,6 @@ view lift model properties items =
             ]
 
 
-{-| Render a single item
--}
 view1 :
     (Msg m -> m)
     -> Model
@@ -621,7 +674,6 @@ clip model g =
             rect 0 g.width 0 g.width
 
 
-
 -- COMPONENT
 
 
@@ -649,7 +701,30 @@ react lift msg idx store =
 {-| Component render. Below is an example, assuming boilerplate setup as
 indicated in `Material`, and a user message `Select String`.
 
-    TODO
+    import Material.Select as Select
+    import Material.Select.Item as Item
+
+    Select.render Mdl [0] model.mdl
+    [ Select.label "Dinosaurs"
+    , Select.floatingLabel
+    , Select.ripple
+    , Select.value model.value
+    ]
+    ( [ "allosaurus"
+      , "brontosaurus"
+      , "carcharodontosaurus"
+      , "diplodocus"
+      ]
+      |> List.map (\string ->
+           Select.item
+           [ Item.onSelect (Select string)
+           , Item.ripple
+           ]
+           [ text string
+           ]
+         )
+    )
+
 -}
 render :
     (Component.Msg button textfield menu layout toggles tooltip tabs (Msg m) dispatch -> m)
@@ -662,6 +737,8 @@ render =
     Component.render get view Component.SelectMsg
 
 
+{-| TODO
+-}
 subs :
     (Component.Msg button textfield menu layout toggles tooltips tabs (Msg m) dispatch -> msg)
     -> Store s
@@ -670,6 +747,12 @@ subs =
     Component.subs Component.SelectMsg .select subscriptions
 
 
+{-| Closes all select components within a Store.
+
+Example:
+
+    Material.update Mdl (Select.closeAll Mdl model.mdl) model
+-}
 closeAll
     : (
     Component.Msg
@@ -769,3 +852,21 @@ rect x y w h =
 toPx : number -> String
 toPx =
     toString >> flip (++) "px"
+
+
+onFocus : m -> Property m
+onFocus f =
+    on "focus" (Json.succeed << always f)
+
+
+onBlur : (Maybe Int -> m) -> Property m
+onBlur f =
+    on "focus" (Json.succeed << f)
+
+
+on : String -> (Maybe Int -> Decoder m) -> Property m
+on event decoder =
+    Internal.option
+        (\config ->
+            { config | listeners = config.listeners ++ [ Html.on event << decoder ] }
+        )

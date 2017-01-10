@@ -1,15 +1,16 @@
 module Demo.Select exposing (..)
 
+import Demo.Code as Code
+import Demo.Page as Page
 import Dict exposing (Dict)
 import Html exposing (..)
-import Platform.Cmd exposing (Cmd, none)
 import Material
 import Material.Grid as Grid
+import Material.Options as Options
 import Material.Options exposing (Style)
 import Material.Select as Select
 import Material.Select.Item as Item
-import Demo.Code as Code
-import Demo.Page as Page
+import Platform.Cmd exposing (Cmd, none)
 
 
 -- MODEL
@@ -73,7 +74,7 @@ view model =
                 , Select.floatingLabel
                 , Select.ripple
                 , Select.value (Maybe.withDefault "" (Dict.get 0 model.values))
-                , Select.onFocus Focus
+                , Options.onFocus Focus
                 ]
                 ([ "allosaurus"
                  , "brontosaurus"
@@ -124,7 +125,7 @@ view model =
                 model.mdl
                 [ Select.label "Dinosaurs"
                 , Select.value (Maybe.withDefault "" (Dict.get 1 model.values))
-                , Select.onFocus Focus
+                , Options.onFocus Focus
                 ]
                 ([ "allosaurus"
                  , "brontosaurus"
@@ -190,7 +191,7 @@ view model =
                     [ Select.label "Dinosaurs"
                     , Select.value selectedValue
                     , Select.index index
-                    , Select.onFocus Focus
+                    , Options.onFocus Focus
                     ]
                     (values
                         |> List.indexedMap

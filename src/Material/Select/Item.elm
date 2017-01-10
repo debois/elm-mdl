@@ -1,14 +1,18 @@
 module Material.Select.Item
     exposing
         ( Model
-        , Config
         , defaultConfig
         , Property
+        , Config
         , onSelect
         , disabled
         , divider
         , ripple
         )
+
+{-|
+@docs onSelect, disabled, divider, ripple
+-}
 
 import Html exposing (Html)
 import Material.Options.Internal as Options
@@ -69,6 +73,8 @@ divider =
     Options.option (\config -> { config | divider = True })
 
 
+{-| Menu item ripples when clicked
+-}
 ripple : Property m
 ripple =
     Options.option (\config -> { config | ripple = True })
