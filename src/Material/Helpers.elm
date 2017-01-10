@@ -88,11 +88,15 @@ blurOn evt =
 -- TUPLES
 
 
+{-| Return the first element of a tuple.
+-}
 fst : (a, b) -> a
 fst ( x, y ) =
     x
 
 
+{-| Return the second element of a tuple.
+-}
 snd : (a, b) -> b
 snd ( x, y ) =
     y

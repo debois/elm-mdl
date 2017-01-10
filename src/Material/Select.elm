@@ -15,7 +15,7 @@ module Material.Select
         , error
         , onFocus
         , onBlur
-          -- , close -- TODO
+        , closeAll
         , floatingLabel
         , index
         , react
@@ -670,12 +670,44 @@ subs =
     Component.subs Component.SelectMsg .select subscriptions
 
 
+closeAll
+    : (
+    Component.Msg
+        button
+        textfield
+        menu
+        layout
+        toggles
+        tooltip
+        tabs
+        (Msg m)
+        dispatch
+    -> m
+    )
+    -> Store s
+    -> Component.Msg
+           button
+           textfield
+           menu
+           layout
+           toggles
+           tooltip
+           tabs
+           select
+           (List m)
+closeAll lift store =
+    store.select
+        |> Dict.map (\idx model ->
+               if model.open then
+                       Component.SelectMsg idx Close |> Just << lift
+                   else
+                       Nothing
+           )
+        |> Dict.values
+        |> List.filterMap identity
+        |> Component.Dispatch
 
--- TODO
---close : (Parts.Msg (Store s) m -> m) -> Store s -> List m
---close lift container =
---  Dict.map (\idx model -> pack lift idx Close) container.select
---  |> Dict.values
+
 -- GEOMETRY
 
 

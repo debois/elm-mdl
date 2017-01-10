@@ -38,6 +38,7 @@ type Msg
     = Select Int String
     | SelectByIndex Int Int
     | Mdl (Material.Msg Msg)
+    | Focus
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -48,6 +49,9 @@ update msg model =
 
         SelectByIndex index selectedIndex ->
             { model | indices = Dict.insert index selectedIndex model.indices } ! []
+
+        Focus ->
+            Material.update Mdl (Select.closeAll Mdl model.mdl) model
 
         Mdl msg ->
             Material.update Mdl msg model
@@ -69,6 +73,7 @@ view model =
                 , Select.floatingLabel
                 , Select.ripple
                 , Select.value (Maybe.withDefault "" (Dict.get 0 model.values))
+                , Select.onFocus Focus
                 ]
                 ([ "allosaurus"
                  , "brontosaurus"
@@ -119,6 +124,7 @@ view model =
                 model.mdl
                 [ Select.label "Dinosaurs"
                 , Select.value (Maybe.withDefault "" (Dict.get 1 model.values))
+                , Select.onFocus Focus
                 ]
                 ([ "allosaurus"
                  , "brontosaurus"
@@ -184,6 +190,7 @@ view model =
                     [ Select.label "Dinosaurs"
                     , Select.value selectedValue
                     , Select.index index
+                    , Select.onFocus Focus
                     ]
                     (values
                         |> List.indexedMap
