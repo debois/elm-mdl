@@ -224,7 +224,6 @@ container =
     option << (\style config -> { config | container = Many style :: config.container })
 
 
-
 dispatch
   : (Component.Msg button textfield menu layout toggles tooltip tabs select (List m) -> m)
     -> Property c m 

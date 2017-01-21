@@ -1,24 +1,27 @@
 module Material.Menu
     exposing
-        ( Model
-        , Msg
-        , defaultModel
-        , Item
-        , item
-        , update
-        , view
-        , render
-        , react
-        , Property
+        ( Property
+        , icon
         , bottomLeft
         , bottomRight
         , topLeft
         , topRight
-        , ripple
-        , icon
+        , index
+
+        , Item
+        , item
+
+        , render
+        , react
+
         , subscriptions
         , subs
-        , transitionDelay
+
+        , Model
+        , defaultModel
+        , Msg(..)
+        , update
+        , view
         )
 
 {-| From the [Material Design Lite documentation](http://www.getmdl.io/components/#menus-section):
@@ -40,8 +43,7 @@ module Material.Menu
 See also the
 [Material Design Specification]([https://www.google.com/design/spec/components/menus.html).
 
-Refer to
-[this site](https://debois.github.io/elm-mdl/#menus)
+Refer to [this site](https://debois.github.io/elm-mdl/#menus)
 for a live demo.
 
 # Subscriptions
@@ -53,15 +55,15 @@ up. Example initialisation of containing app:
     import Material
 
     type Model =
-      { ...
+      { …
       , mdl : Material.Model -- Boilerplate
       }
 
     type Msg =
-      ...
+      …
       | Mdl Material.Msg -- Boilerplate
 
-    ...
+    …
 
     App.program
       { init = init
@@ -70,11 +72,15 @@ up. Example initialisation of containing app:
       , update = update
       }
 
+# Import
+
+Along with this module you will want to to import Material.Dropdown.Item.
+
 # Render
 @docs render, subs
 
-# Items
-@docs Item, item, onSelect, disabled, divider
+# Item
+@docs Item, item
 
 # Options
 @docs Property
@@ -83,7 +89,7 @@ up. Example initialisation of containing app:
 @docs bottomLeft, bottomRight, topLeft, topRight
 
 ## Appearance
-@docs ripple, icon
+@docs icon, index
 
 # Elm architecture
 @docs Model, defaultModel, Msg, update, view, subscriptions
@@ -93,21 +99,21 @@ up. Example initialisation of containing app:
 
 -}
 
-import Html.Events as Html exposing (defaultOptions)
+import DOM exposing (Rectangle)
 import Html.Attributes as Html
+import Html.Events as Html exposing (defaultOptions)
 import Html exposing (..)
 import Json.Decode as Json exposing (Decoder)
-import Mouse
-import String
+import Material.Component as Component exposing (Indexed, Index)
+import Material.Dropdown as Dropdown exposing (Alignment(..))
+import Material.Dropdown.Geometry as Geometry exposing (Geometry, Element)
+import Material.Dropdown.Item as Item
 import Material.Helpers as Helpers exposing (pure, map1st)
 import Material.Icon as Icon
-import Material.Dropdown.Geometry as Geometry exposing (Geometry, Element)
 import Material.Options as Options exposing (cs, css, styled, styled_, when)
 import Material.Options.Internal as Internal
-import Material.Component as Component exposing (Indexed, Index)
-import Material.Dropdown.Item as Item
-import Material.Dropdown as Dropdown exposing (Alignment(..), KeyCode, ItemSummary)
-import DOM exposing (Rectangle)
+import Mouse
+import String
 
 
 -- CONSTANTS
@@ -158,10 +164,14 @@ type alias Model =
     }
 
 
+{-| TODO
+-}
 type alias Item m =
   Item.Model m
 
 
+{-| TODO
+-}
 item : List (Item.Property m) -> List (Html m) -> Item m
 item =
   Item.item
@@ -185,9 +195,20 @@ defaultModel =
 type Msg m
     = Open Geometry
     | Close
-    | Key (Maybe Dropdown.ItemIndex) (List (Dropdown.ItemSummary m)) Dropdown.KeyCode Geometry
+    | Key (Maybe ItemIndex) (List (ItemSummary m)) KeyCode Geometry
     | Click Alignment Mouse.Position
     | MenuMsg (Dropdown.Msg m)
+
+
+type alias ItemIndex =
+    Int
+
+type alias ItemSummary m =
+    Internal.Summary (Item.Config m) m
+
+
+type alias KeyCode =
+    Int
 
 
 {-| Component update.
@@ -248,20 +269,14 @@ update fwd msg model =
 
 
 type alias Config m =
-    { alignment : Alignment
-    , ripple : Bool
-    , index : Maybe Int
-    , listeners : List (Maybe Int -> Attribute m)
+    { dropdown : List (Dropdown.Property m)
     , icon : String
     }
 
 
 defaultConfig : Config m
 defaultConfig =
-    { alignment = BottomLeft
-    , ripple = False
-    , index = Nothing
-    , listeners = []
+    { dropdown = []
     , icon = "more_vert"
     }
 
@@ -272,11 +287,41 @@ type alias Property m =
     Options.Property (Config m) m
 
 
-{-| Menu items ripple when clicked
+dropdownOption : Dropdown.Property m -> Property m
+dropdownOption option =
+    Internal.option (\config -> { config | dropdown = option :: config.dropdown })
+
+
+{-| Menu extends from the bottom-left of the icon.
+(Suitable for the dropdown-icon sitting in a top-left corner)
 -}
-ripple : Property m
-ripple =
-    Internal.option (\config -> { config | ripple = True })
+bottomLeft : Property m
+bottomLeft =
+    dropdownOption Dropdown.bottomLeft
+
+
+{-| Menu extends from the bottom-right of the icon.
+(Suitable for the dropdown-icon sitting in a top-right corner)
+-}
+bottomRight : Property m
+bottomRight =
+    dropdownOption Dropdown.bottomRight
+
+
+{-| Menu extends from the top-left of the icon.
+(Suitable for the dropdown-icon sitting in a lower-left corner)
+-}
+topLeft : Property m
+topLeft =
+    dropdownOption Dropdown.topLeft
+
+
+{-| Menu extends from the rop-right of the icon.
+(Suitable for the dropdown-icon sitting in a lower-right corner)
+-}
+topRight : Property m
+topRight =
+    dropdownOption Dropdown.topRight
 
 
 {-| Set the dropdown icon
@@ -286,36 +331,11 @@ icon =
     Internal.option << (\name config -> { config | icon = name })
 
 
-{-| Menu extends from the bottom-left of the icon.
-(Suitable for the dropdown-icon sitting in a top-left corner)
+{-| Set the default value of a menu.
 -}
-bottomLeft : Property m
-bottomLeft =
-    Internal.option (\config -> { config | alignment = BottomLeft })
-
-
-{-| Menu extends from the bottom-right of the icon.
-(Suitable for the dropdown-icon sitting in a top-right corner)
--}
-bottomRight : Property m
-bottomRight =
-    Internal.option (\config -> { config | alignment = BottomRight })
-
-
-{-| Menu extends from the top-left of the icon.
-(Suitable for the dropdown-icon sitting in a lower-left corner)
--}
-topLeft : Property m
-topLeft =
-    Internal.option (\config -> { config | alignment = TopLeft })
-
-
-{-| Menu extends from the rop-right of the icon.
-(Suitable for the dropdown-icon sitting in a lower-right corner)
--}
-topRight : Property m
-topRight =
-    Internal.option (\config -> { config | alignment = TopRight })
+index : Int -> Property m
+index =
+    dropdownOption << Dropdown.index
 
 
 
@@ -339,7 +359,13 @@ view lift model properties items =
             if model.dropdown.index /= Nothing then
                 model.dropdown.index
             else
-                config.index
+                dropdownConfig.index
+
+        dropdownSummary =
+            Internal.collect Dropdown.defaultConfig config.dropdown
+
+        dropdownConfig =
+            dropdownSummary.config
 
         itemSummaries =
             List.map (Internal.collect Item.defaultConfig << .options) items
@@ -364,22 +390,15 @@ view lift model properties items =
                     |> Json.map lift
                   )
             ]
-            ( List.concat
-              [ List.map ((|>) defaultIndex)
-                  ( ( \defaultIndex ->
-                        Html.attribute "onkeydown" """javascript:
-                            if ((event.keyCode == 38) || (event.keyCode == 40)) {
-                                event.preventDefault();
-                            }
-                            if (event.keyCode == 32) {
-                                //return false;
-                            }
-                        """
-                    )
-                      :: config.listeners
-                  )
-              ]
-            )
+            [ Html.attribute "onkeydown" """javascript:
+                  if ((event.keyCode == 38) || (event.keyCode == 40)) {
+                      event.preventDefault();
+                  }
+                  if (event.keyCode == 32) {
+                      //return false;
+                  }
+              """
+            ]
             [ Icon.view "more_vert"
                 [ cs "material-icons"
                 , css "pointer-events" "none"
@@ -391,30 +410,12 @@ view lift model properties items =
             (css "position" "relative" :: properties)
             []
             [ button
-            , Dropdown.view (MenuMsg >> lift) model.dropdown
-              [ when (config.index /= Nothing)
-                    (Dropdown.index (config.index |> Maybe.withDefault 0))
-              ]
+            , Dropdown.view (MenuMsg >> lift) model.dropdown config.dropdown
+--              [ when (dropdownConfig.index /= Nothing)
+--                    (Dropdown.index (config.index |> Maybe.withDefault 0))
+--              ]
               items
             ]
-
--- TODO: different from Dropdown.delay
-
-transitionDelay
-    : Alignment
-    -> Float
-    -> Float
-    -> Float
-    -> Item.Property m
-transitionDelay alignment height offsetTop offsetHeight =
-    let
-        t =
-            if alignment == TopLeft || alignment == TopRight then
-                (height - offsetTop - offsetHeight) / height * transitionDuration
-            else
-                (offsetTop / height * transitionDuration)
-    in
-        css "transition-delay" <| toString t ++ "s"
 
 
 -- COMPONENT
@@ -487,14 +488,6 @@ subs =
 
 
 -- HELPERS
-
-
-on : String -> (Maybe Int -> Decoder m) -> Property m
-on event decoder =
-    Internal.option
-        (\config ->
-            { config | listeners = config.listeners ++ [ Html.on event << decoder ] }
-        )
 
 
 decodeGeometry : Decoder Geometry

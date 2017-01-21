@@ -1,45 +1,74 @@
 module Material.Dropdown
     exposing
-        ( Model
-        , defaultModel
-        , Msg(..)
-        , Item
-        , item
-        , update
-        , view
-        , render
-        , react
-        , Property
+        ( Property
         , Alignment(..)
         , bottomLeft
         , bottomRight
         , topLeft
         , topRight
-        , ripple
         , index
+
+        , Item
+        , item
+
+        , render
+        , react
+
+        , Config
+        , defaultConfig
+
         , defaultIndex
 
-        , transitionDelay
-        , containerGeometry
-        , clip
-
-        , ItemIndex
-        , ItemSummary
-        , KeyCode
+        , Model
+        , defaultModel
+        , Msg(..)
+        , update
+        , view
         )
 
+{-| This component implements a generic dropdown component. It is used by
+Material.Menu and Material.Select.
+
+# Render
+@docs render
+
+# Options
+@docs Property
+
+# Alignment
+@docs Alignment, bottomLeft, bottomRight, topLeft, topRight
+
+# Configuration
+@docs index
+
+# Item
+@docs Item, item
+
+# Config
+@docs Config, defaultConfig
+
+# Helpers
+@docs defaultIndex
+
+# Elm architecture
+@docs Model, defaultModel, Msg, update, view
+
+# Internal use
+@docs react
+-}
+
 import Dict exposing (Dict)
-import Html.Keyed
 import Html exposing (Html, Attribute)
-import Mouse
-import String
-import Material.Helpers as Helpers exposing (pure, map1st)
+import Html.Keyed
+import Material.Component as Component exposing (Indexed, Index)
 import Material.Dropdown.Geometry as Geometry exposing (Geometry, Element)
+import Material.Dropdown.Item as Item
+import Material.Helpers as Helpers exposing (pure, map1st)
 import Material.Options as Options exposing (cs, css, styled, styled_, when)
 import Material.Options.Internal as Internal
 import Material.Ripple as Ripple
-import Material.Component as Component exposing (Indexed, Index)
-import Material.Dropdown.Item as Item
+import Mouse
+import String
 
 
 -- CONSTANTS
@@ -76,10 +105,14 @@ type alias Model =
     }
 
 
+{-| Convenience export from Dropdown.Item
+-}
 type alias Item m =
   Item.Model m
 
 
+{-| Convenience export from Dropdown.Item
+-}
 item : List (Item.Property m) -> List (Html m) -> Item.Model m
 item =
   Item.item
@@ -107,17 +140,26 @@ type Msg m
     | Close
     | Click Alignment Mouse.Position
     | Key (Maybe ItemIndex) (List (ItemSummary m)) KeyCode Geometry
-    -- | Input String
 
 
+{-| The index of an item in the Dropdown's list.
+-}
 type alias ItemIndex =
   Int
 
 
+{-| ItemSummary in particular captures an Item's onSelect handler which need to
+be passed from view to model to Dispatch it.
+
+TODO: We only need onSelect, to we should refactor this type to have a nicer
+type signature for Key.
+-}
 type alias ItemSummary m =
     Internal.Summary (Item.Config m) m
 
 
+{-| Int-representation of a key being pressed.
+-}
 type alias KeyCode =
     Int
 
@@ -282,6 +324,15 @@ update fwd msg model =
 -- PROPERTIES
 
 
+{-| Dropdown configuration.
+-}
+type alias Config m =
+    { alignment : Alignment
+    , index : Maybe Int
+    , listeners : List (Maybe Int -> Attribute m)
+    }
+
+
 {-| Menu alignment.
 Specifies where the menu opens in relation to the
 button, rather than where the menu is positioned.
@@ -293,18 +344,12 @@ type Alignment
     | TopRight
 
 
-type alias Config m =
-    { alignment : Alignment
-    , ripple : Bool
-    , index : Maybe Int
-    , listeners : List (Maybe Int -> Attribute m)
-    }
-
-
+{-| Default configuration.
+Dropdown is aligned BottomLeft.
+-}
 defaultConfig : Config m
 defaultConfig =
     { alignment = BottomLeft
-    , ripple = False
     , index = Nothing
     , listeners = []
     }
@@ -314,13 +359,6 @@ defaultConfig =
 -}
 type alias Property m =
     Options.Property (Config m) m
-
-
-{-| Menu items ripple when clicked
--}
-ripple : Property m
-ripple =
-    Internal.option (\config -> { config | ripple = True })
 
 
 {-| Menu extends from the bottom-left of the icon.
@@ -482,6 +520,14 @@ clip model alignment g =
                     ""
 
 
+{-| The default index captures the notion of the currently selected item, or
+the default value of the component. Because the value of the component is
+external to Dropdown, it can be specified by config. Because keyboard input
+changes this notion (and we do not want to impose keyboard input on the user),
+it is also kept in Model. Generally, Model takes precedence over Config and
+event listeners allow you to read that value to update your Model accordingly
+when the Dropdown closes.
+-}
 defaultIndex : Model -> Maybe Int -> Maybe Int
 defaultIndex model defaultValue =
     if model.index /= Nothing then
@@ -530,10 +576,6 @@ view lift model properties items =
         fwdRipple =
             Item.Ripple >> ItemMsg -1 >> lift
 
-        ripple =
-            model.ripples
-                |> Dict.get -1
-                |> Maybe.withDefault Ripple.model
 
         numItems =
             List.length items

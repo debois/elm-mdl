@@ -23,6 +23,8 @@ module Material.Textfield
         , Msg(..)
         , update
         , view
+        , Config
+        , defaultConfig
         )
 
 

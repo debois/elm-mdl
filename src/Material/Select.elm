@@ -1,25 +1,30 @@
 module Material.Select
     exposing
-        ( Model
-        , defaultModel
-        , Msg
-        , update
-        , view
+        ( 
+          Property
+        , value
+        , label
+        , floatingLabel
+        , disabled
+        , error
+        , autofocus
+        , ripple
+        , index
+        
+        , Item
+        , item
+
         , render
         , react
 
-        , item
-
-        , Property
-        , ripple
-        , value
-        , disabled
-        , label
-        , error
-        , floatingLabel
-        , index
         , subscriptions
         , subs
+        
+        , Model
+        , defaultModel
+        , Msg(..)
+        , update
+        , view
         )
 
 {-| Refer to [this site](https://debois/github.io/elm-mdl/#select)
@@ -34,7 +39,8 @@ up. Example initialisation of containing app:
     import Material
 
     type Model =
-        { mdl : Material.Model -- Boilerplate
+        { …
+        , mdl : Material.Model -- Boilerplate
         }
     type Msg =
         …
@@ -49,55 +55,48 @@ up. Example initialisation of containing app:
         }
 
 
-# Behavior
-
-The Select component closes itself on pressing TAB. It does not close
-automatically if the user focuses another component by other means, ie.
-clicking.
-
-If you want Select components to close if another element receives focus, you
-will have to listen to that element's focus event and call
-`Material.Select.closeAll` from your program.
-
 # Import
 
-Along with this module you will probably want to import Material.Shared.Item.
+Along with this module you will want to import Material.Dropdown.Item.
 
 # Render
 @docs render, subs
 
+# Item
+@docs Item, item
+
 # Options
 @docs Property
 
-# Items
-@docs item
-
 # Appearance
-@docs value, label, floatingLabel, error, disabled, index
+@docs value, label, floatingLabel, disabled, error, autofocus, ripple, index
 
-# Appearance
-@docs ripple
+# Elm architecture
+@docs Model, defaultModel, Msg, update, view, subscriptions
+
+# Internal use
+@docs react
 -}
 
 import Dict exposing (Dict)
+import DOM
 import DOM exposing (Rectangle)
 import Html.Attributes as Attributes exposing (class, type_, attribute, property)
 import Html.Events as Html exposing (defaultOptions, targetValue)
 import Html exposing (..)
 import Json.Decode as Json exposing (Decoder)
 import Material.Component as Component exposing (Indexed, Index)
+import Material.Dropdown as Dropdown exposing (Msg)
+import Material.Dropdown.Geometry as Geometry exposing (Geometry)
+import Material.Dropdown.Item as Item
 import Material.Helpers as Helpers exposing (pure, map1st)
 import Material.Icon as Icon
 import Material.Options as Options exposing (Style, cs, css, styled, styled_, when)
 import Material.Options.Internal as Internal
 import Material.Ripple as Ripple
-import Material.Dropdown.Item as Item
-import Material.Dropdown.Geometry as Geometry exposing (Geometry)
 import Material.Textfield as Textfield
 import Mouse
 import String
-import Material.Dropdown as Dropdown exposing (Msg)
-import DOM
 
 
 {-| Component subscriptions.
@@ -122,10 +121,6 @@ type alias Model =
     }
 
 
-type alias Item m =
-    Item.Model m
-
-
 {-| Default component model
 -}
 defaultModel : Model
@@ -139,7 +134,13 @@ defaultModel =
 -- ITEM
 
 
-{-| Construct a dropdown item.
+{-| TODO
+-}
+type alias Item m =
+    Item.Model m
+
+
+{-| TODO
 -}
 item : List (Item.Property m) -> List (Html m) -> Item m
 item =
@@ -226,41 +227,17 @@ update fwd msg model =
 
 
 type alias Config m =
-    {
-
-      input : List (Options.Style m)
-
-      -- Basically Textfield:
-    , labelText : Maybe String
-    , labelFloat : Bool
-    , error : Maybe String
-    , disabled : Bool
-    , autofocus : Bool
-    , inner : List (Options.Style m)
-    , value : String
-
-      -- Shared.Model:
+    { textfield : List (Textfield.Property m)
+    , dropdown : List (Dropdown.Property m)
     , ripple : Bool
-    , index : Maybe Int
-    , listeners : List (Maybe Int -> Html.Attribute m)
     }
 
 
 defaultConfig : Config m
 defaultConfig =
-    { input = []
-
-    , labelText = Nothing
-    , labelFloat = False
-    , error = Nothing
-    , disabled = False
-    , autofocus = False
-    , inner = []
-    , value = ""
-
+    { textfield = []
+    , dropdown = []
     , ripple = False
-    , index = Nothing
-    , listeners = []
     }
 
 
@@ -270,18 +247,28 @@ type alias Property m =
     Options.Property (Config m) m
 
 
+textfieldOption : Textfield.Property m -> Property m
+textfieldOption option =
+    Internal.option (\config -> { config | textfield = option :: config.textfield })
+
+
+dropdownOption : Dropdown.Property m -> Property m
+dropdownOption option =
+    Internal.option (\config -> { config | dropdown = option :: config.dropdown })
+
+
 {-| Select highlights the `n`-th item (0-based).
 -}
 index : Int -> Property m
-index v =
-    Internal.option (\config -> { config | index = Just v })
+index =
+    dropdownOption << Dropdown.index
 
 
 {-| Select shows `s` as the selected value.
 -}
 value : String -> Property m
-value v =
-    Internal.option (\config -> { config | value = v })
+value =
+    textfieldOption << Textfield.value
 
 
 {-| Select itself ripples when clicked
@@ -294,36 +281,36 @@ ripple =
 {-| Label of the Select
 -}
 label : String -> Property m
-label str =
-    Internal.option (\config -> { config | labelText = Just str })
+label =
+    textfieldOption << Textfield.label
 
 
 {-| Label of Select animates away from the input area on input
 -}
 floatingLabel : Property m
 floatingLabel =
-    Internal.option (\config -> { config | labelFloat = True })
+    textfieldOption Textfield.floatingLabel
 
 
 {-| Error message
 -}
 error : String -> Property m
-error str =
-    Internal.option (\config -> { config | error = Just str })
+error =
+    textfieldOption << Textfield.error
 
 
 {-| Disable the Select input
 -}
 disabled : Property m
 disabled =
-    Internal.option (\config -> { config | disabled = True })
+    textfieldOption Textfield.disabled
 
 
 {-| Specifies tha the Select should automatically get focus when the page loads
 -}
 autofocus : Property m
 autofocus =
-    Internal.option (\config -> { config | autofocus = True })
+    textfieldOption Textfield.autofocus
 
 
 -- VIEW
@@ -350,50 +337,53 @@ view lift model properties items =
                 |> Dict.get -1
                 |> Maybe.withDefault Ripple.model
 
+        dropdownSummary =
+            Internal.collect Dropdown.defaultConfig dropdownOptions
+
+        textfieldSummary =
+            Internal.collect Textfield.defaultConfig textfieldOptions
+
+        dropdownConfig =
+            dropdownSummary.config
+
+        textfieldConfig =
+            textfieldSummary.config
+
         defaultIndex =
-            Dropdown.defaultIndex model.dropdown config.index
+            Dropdown.defaultIndex model.dropdown dropdownConfig.index
 
         itemSummaries =
             List.map (Internal.collect Item.defaultConfig << .options) items
 
-        button =
+        dropdownOptions =
+            config.dropdown
+
+        textfieldOptions =
+            List.concat
+            [ config.textfield
+            , [ ( Options.on "keydown"
+                    ( Json.map2
+                          (Dropdown.Key defaultIndex itemSummaries)
+                          Html.keyCode
+                          decodeAsInput
+                      |> Json.map (MenuMsg >> lift)
+                    )
+                )
+              , Options.on "blur" (Json.succeed (Blur |> lift))
+              , Options.on "input" (Json.map (Input >> lift) Html.targetValue)
+
+              , when config.ripple
+                  (Options.on "focus" (Json.map (Focus >> lift) decodeAsInput))
+              , when (not config.ripple)
+                  (Options.on "click" (Json.map (Open >> lift) decodeAsInput))
+              ]
+            ]
+
+        trigger =
             [ Icon.view "expand_more" [] |> Html.map lift
-            , Textfield.view (TextfieldMsg >> lift) model.textfield
-                  ( -- Internal.input
-                    [ ( Options.on "keydown"
-                          ( Json.map2
-                                (Dropdown.Key defaultIndex itemSummaries)
-                                Html.keyCode
-                                decodeAsInput
-                            |> Json.map (MenuMsg >> lift)
-                          )
-                      )
-                    , Options.on "blur" (Json.succeed (Blur |> lift))
-                    , Options.on "input" (Json.map (Input >> lift) Html.targetValue)
-
-                    , when config.ripple
-                        (Options.on "focus" (Json.map (Focus >> lift) decodeAsInput))
-                    , when (not config.ripple)
-                        (Options.on "click" (Json.map (Open >> lift) decodeAsInput))
-
-                    , when config.labelFloat Textfield.floatingLabel
-                    , when (config.labelText /= Nothing)
-                        (Textfield.label (Maybe.withDefault "" config.labelText))
-                    , when (config.error /= Nothing)
-                        (Textfield.error (Maybe.withDefault "" config.error))
-                    , when (config.autofocus) Textfield.autofocus
-                    , when (config.disabled) Textfield.disabled
-                    , Textfield.value config.value
-
-                    -- TODO:
-                    -- , Options.many config.inner
-
-                    , List.map ((|>) defaultIndex) config.listeners
-                      |> List.map Options.attribute
-                      |> Options.many
-                    ]
-                  )
+            , Textfield.view (TextfieldMsg >> lift) model.textfield textfieldOptions
                   []
+
             , styled_ Html.div
                 [ cs "mdl-select__trigger"
                 , css "display" (if config.ripple then "block" else "none")
@@ -414,12 +404,7 @@ view lift model properties items =
           ]
 
         dropdown =
-          Dropdown.view (MenuMsg >> lift) model.dropdown
-          [ when (config.index /= Nothing)
-                (Dropdown.index (config.index |> Maybe.withDefault 0))
-          , Dropdown.bottomRight
-          ]
-          items
+          Dropdown.view (MenuMsg >> lift) model.dropdown dropdownOptions items
     in
         Internal.apply summary div
             ( cs "mdl-select"
@@ -427,7 +412,7 @@ view lift model properties items =
               :: properties
             )
             []
-            ( button ++ [ dropdown ]
+            ( trigger ++ [ dropdown ]
             )
 
 

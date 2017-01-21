@@ -1,7 +1,6 @@
 module Material.Dropdown.Item
     exposing
         ( Model
-        , ItemIndex
         , item
 
         , Property
@@ -13,23 +12,37 @@ module Material.Dropdown.Item
         , divider
         , ripple
         , options
+        , selected
 
         , view
-        , selected
-        , Msg(Select,Ripple)
-        -- , update
-        -- ^^^^ TODO
+        , Msg(..)
         )
 
-{-|
+{-| TODO
+
+# Item
+@docs item
+
+# Listeners
+@docs onSelect
+
+# Property
+@docs selected, disabled, divider, ripple, options
+
+# API
+@docs Property, Config, defaultConfig
+
+# Elm architecture
+@docs Model, Msg, view
+
 @docs onSelect, disabled, divider, ripple
 -}
 
 import Dict exposing (Dict)
-import Html exposing (li)
 import Html.Attributes exposing (property, attribute, class)
 import Html.Events as Html
 import Html exposing (Html)
+import Html exposing (li)
 import Json.Encode as Json exposing (int)
 import Material.Options exposing (Style, cs, css, when)
 import Material.Options.Internal as Options
@@ -47,10 +60,14 @@ type alias Model m =
     }
 
 
+{-| TODO
+-}
 type alias ItemIndex =
     Int
 
 
+{-| TODO
+-}
 item : List (Property m) -> List (Html m) -> Model m
 item options html =
   { html = html
@@ -58,11 +75,15 @@ item options html =
   }
 
 
+{-| TODO
+-}
 type Msg m =
       Select (Maybe m)
     | Ripple Ripple.Msg
 
 
+{-| TODO
+-}
 type alias Store s =
     { s | ripples : Dict ItemIndex Ripple.Model
         , index : Maybe ItemIndex
@@ -70,6 +91,8 @@ type alias Store s =
     }
 
 
+{-| TODO
+-}
 view :
     (Msg msg -> msg)
     -> Store s
@@ -149,10 +172,14 @@ view lift top index model defaultOptions =
 -- PROPERTIES
 
 
+{-| TODO
+-}
 type alias Property m =
     Options.Property (Config m) m
 
 
+{-| TODO
+-}
 type alias Config m =
     { onSelect : Maybe m
     , enabled : Bool
@@ -163,6 +190,8 @@ type alias Config m =
     }
 
 
+{-| TODO
+-}
 defaultConfig : Config m
 defaultConfig =
     { onSelect = Nothing

@@ -25,7 +25,6 @@ type alias Model =
     , selected : Maybe ( Int, Int )
     , checked : Set Int
     , icon : Maybe String
-    , ripple : Bool
     }
 
 
@@ -35,7 +34,6 @@ model =
     , selected = Nothing
     , checked = Set.fromList [ 0, 2 ]
     , icon = Nothing
-    , ripple = True
     }
 
 
@@ -106,8 +104,7 @@ type alias Align =
 
 options : Model -> Align -> List (Menu.Property Msg)
 options model align =
-    [ Menu.ripple |> when model.ripple
-    , model.icon
+    [ model.icon
         |> Maybe.map Menu.icon
         |> Maybe.withDefault nop
     , Tuple.second align
@@ -118,11 +115,7 @@ showOptions : Model -> Align -> String
 showOptions model align =
     let
         inner =
-            [ if model.ripple then
-                "Menu.ripple"
-              else
-                ""
-            , model.icon
+            [ model.icon
                 |> Maybe.map (\i -> "Menu.icon \"" ++ i ++ "\"")
                 |> Maybe.withDefault ""
             , "Menu." ++ Tuple.first align
