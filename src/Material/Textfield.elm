@@ -57,7 +57,7 @@ for a live demo.
 @docs render
 
 # Options
-@docs Property, value
+@docs Property, Config, defaultConfig, value
 
 ## Appearance
 
@@ -98,6 +98,8 @@ type Kind
     | Email
 
 
+{-| TODO
+-}
 type alias Config m =
     { labelText : Maybe String
     , labelFloat : Bool
@@ -112,6 +114,8 @@ type alias Config m =
     }
 
 
+{-| TODO
+-}
 defaultConfig : Config m
 defaultConfig =
     { labelText = Nothing
