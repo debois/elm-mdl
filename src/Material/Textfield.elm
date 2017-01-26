@@ -5,6 +5,7 @@ module Material.Textfield
         , floatingLabel
         , error
         , value
+        , defaultValue
         , disabled
         , password
         , render
@@ -101,6 +102,7 @@ type alias Config m =
     , labelFloat : Bool
     , error : Maybe String
     , value : Maybe String
+    , defaultValue : Maybe String
     , disabled : Bool
     , kind : Kind
     , expandable : Maybe String
@@ -116,6 +118,7 @@ defaultConfig =
     , labelFloat = False
     , error = Nothing
     , value = Nothing
+    , defaultValue = Nothing
     , disabled = False
     , kind = Text
     , expandable = Nothing
@@ -184,6 +187,14 @@ value : String -> Property m
 value =
     Internal.option
         << (\str config -> { config | value = Just str })
+
+
+{-| Set the default value of the textfield
+-}
+defaultValue : String -> Property m
+defaultValue =
+    Internal.option
+        << (\str config -> { config | defaultValue = Just str })
 
 
 {-| Specifies that the input should automatically get focus when the page loads
@@ -379,60 +390,80 @@ view lift model options _ =
             , Internal.on1 "focus" lift Focus
             , Internal.on1 "blur" lift Blur
             , cs "mdl-textfield--floating-label" |> when config.labelFloat
-            , cs "is-invalid" |> when  (config.error /= Nothing)
-            , cs "is-dirty" 
-                |> when (case config.value of
-                           Just "" -> False
-                           Just _ -> True
-                           Nothing -> model.isDirty)
-            , cs "is-focused" |> when  (model.isFocused && not config.disabled)
-            , cs "is-disabled" |> when  config.disabled
+            , cs "is-invalid" |> when (config.error /= Nothing)
+            , cs "is-dirty"
+                |> when
+                    (case config.value of
+                        Just "" ->
+                            False
+
+                        Just _ ->
+                            True
+
+                        Nothing ->
+                            model.isDirty
+                    )
+            , cs "is-focused" |> when (model.isFocused && not config.disabled)
+            , cs "is-disabled" |> when config.disabled
             , cs "mdl-textfield--expandable" |> when (config.expandable /= Nothing)
-            ] <| expHolder
-            [ Internal.applyInput summary 
-                (if config.kind == Textarea then Html.textarea else Html.input)
-                [ cs "mdl-textfield__input"
-                , css "outline" "none"
-                , Internal.on1 "focus" lift Focus
-                , Internal.on1 "blur" lift Blur
-                , case config.kind of
-                    Text ->
-                        Internal.attribute <| type_ "text"
-
-                    Password ->
-                        Internal.attribute <| type_ "password"
-
-                    Email -> 
-                        Internal.attribute <| type_ "email" 
-                    _ ->
-                        nop
-                , Internal.attribute (Html.Attributes.disabled True) 
-                    |> when config.disabled
-                , expandableId
-                , case config.value of
-                    Nothing ->
-                        -- If user is not setting value, is we need the default input
-                        -- decoder to maintain is-dirty
-                        Options.on "input"
-                            (Decoder.map (Input >> lift) Html.Events.targetValue)
-
-                    Just v ->
-                        Internal.attribute <| Html.Attributes.value v
-                ]
-                []
-            , Html.label
-                ([ class "mdl-textfield__label" ] ++ labelFor)
-                (case config.labelText of
-                    Just str ->
-                        [ text str ]
-
-                    Nothing ->
-                        []
-                )
-            , config.error
-                |> Maybe.map (\e -> span [ class "mdl-textfield__error" ] [ text e ])
-                |> Maybe.withDefault (div [] [])
             ]
+        <|
+            expHolder
+                [ Internal.applyInput summary
+                    (if config.kind == Textarea then
+                        Html.textarea
+                     else
+                        Html.input
+                    )
+                    [ cs "mdl-textfield__input"
+                    , css "outline" "none"
+                    , Internal.on1 "focus" lift Focus
+                    , Internal.on1 "blur" lift Blur
+                    , case config.kind of
+                        Text ->
+                            Internal.attribute <| type_ "text"
+
+                        Password ->
+                            Internal.attribute <| type_ "password"
+
+                        Email ->
+                            Internal.attribute <| type_ "email"
+
+                        _ ->
+                            nop
+                    , Internal.attribute (Html.Attributes.disabled True)
+                        |> when config.disabled
+                    , expandableId
+                    , case config.value of
+                        Nothing ->
+                            -- If user is not setting value, is we need the default input
+                            -- decoder to maintain is-dirty
+                            Options.on "input"
+                                (Decoder.map (Input >> lift) Html.Events.targetValue)
+
+                        Just v ->
+                            Internal.attribute <| Html.Attributes.value v
+                    , case config.defaultValue of
+                        Nothing ->
+                            Options.nop
+
+                        Just v ->
+                            Internal.attribute <| Html.Attributes.defaultValue v
+                    ]
+                    []
+                , Html.label
+                    ([ class "mdl-textfield__label" ] ++ labelFor)
+                    (case config.labelText of
+                        Just str ->
+                            [ text str ]
+
+                        Nothing ->
+                            []
+                    )
+                , config.error
+                    |> Maybe.map (\e -> span [ class "mdl-textfield__error" ] [ text e ])
+                    |> Maybe.withDefault (div [] [])
+                ]
 
 
 
