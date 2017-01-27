@@ -13,6 +13,7 @@ module Material.Options
         , styled_
         , stylesheet
         , Style
+        , node
         , div
         , span
         , img
@@ -88,7 +89,7 @@ elements.
 @docs Style, styled, styled_
 
 ## Elements
-@docs div, span, img
+@docs node, div, span, img
 @docs stylesheet
 
 ## Attributes
@@ -123,7 +124,7 @@ as follows:
   <tr>
     <th>Option</th><th>Element</th>
   </tr>
-  <tr> <td>`Options.id`         </td><td> input     </td> </tr> 
+  <tr> <td>`Options.id`         </td><td> input     </td> </tr>
   <tr> <td>`Options.css`        </td><td> container </td> </tr>
   <tr> <td>`Options.cs`         </td><td> container </td> </tr>
   <tr> <td>`Options.attributes` </td><td> input     </td> </tr>
@@ -147,7 +148,6 @@ import Html.Attributes
 import Html.Events
 import Json.Decode as Json
 import Material.Options.Internal as Internal exposing (..)
-
 
 
 -- PROPERTIES
@@ -200,16 +200,33 @@ styled_ ctor props attrs =
         )
 
 
-{-| Convenience function for the ultra-common case of apply elm-mdl styling to a
-`div` element. Use like this:
+{-| Convenience function for the case of apply elm-mdl styling to a
+`node` element that is not defined in elm-mdl. Use like this:
 
     myDiv : Html m
     myDiv =
-      Options.div
+      Options.node "div"
         [ Color.background Color.primary
         , Color.text Color.accentContrast
         ]
         [ text "I'm in color!" ]
+
+-}
+node : String -> List (Property c m) -> List (Html m) -> Html m
+node nodeType =
+    styled (Html.node nodeType)
+
+
+{-| Convenience function for the ultra-common case of apply elm-mdl styling to a
+`div` element. Use like this:
+
+myDiv : Html m
+myDiv =
+Options.div
+[ Color.background Color.primary
+, Color.text Color.accentContrast
+]
+[ text "I'm in color!" ]
 
 -}
 div : List (Property c m) -> List (Html m) -> Html m
@@ -291,7 +308,7 @@ applied; otherwise it is ignored. Use like this:
     Button.disabled |> when (not model.isRunning)
 -}
 when : Bool -> Property c m -> Property c m
-when guard prop  =
+when guard prop =
     if guard then
         prop
     else
@@ -316,6 +333,7 @@ somewhere.
 stylesheet : String -> Html m
 stylesheet css =
     Html.node "style" [] [ Html.text css ]
+
 
 
 -- STYLE
