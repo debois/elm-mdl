@@ -196,7 +196,7 @@ th options html =
     in
         Internal.apply summary
             Html.th
-            [ cs "mdl-data-table__cell--non-numeric" |> when config.numeric 
+            [ cs "mdl-data-table__cell--non-numeric" |> when (not config.numeric) 
             , case config.sorted of
                 Just Ascending ->
                     cs "mdl-data-table__header--sorted-ascending"
@@ -211,7 +211,8 @@ th options html =
             html
 
 
-{-| Containing column is interpreted as numeric when used as sorting key
+{-| Containing column is interpreted as 
+when used as sorting key
 -}
 numeric : Property { a | numeric : Bool } m
 numeric =
@@ -275,7 +276,7 @@ td options html =
     in
         Internal.apply summary
             Html.td
-            [ cs "mdl-data-table__cell--non-numeric" |> when config.numeric 
+            [ cs "mdl-data-table__cell--non-numeric" |> when (not config.numeric)
             ]
             []
             html
