@@ -1,0 +1,66 @@
+@import "../material-design-lite/src/variables";
+@import "../material-design-lite/src/mixins";
+
+
+.mdl-select {
+  position: relative;
+  display: inline-block;
+}
+
+.mdl-select .mdl-select__trigger {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: $input-text-vertical-spacing;
+  overflow: hidden;
+  cursor: pointer; }
+
+.mdl-select .mdl-textfield .mdl-textfield__input {
+  cursor: pointer; }
+
+.mdl-select .material-icons {
+  position: absolute;
+  top: 21px;
+  right: 0;
+  pointer-events: none; }
+
+.mdl-menu__item.mdl-menu__item--selected,
+.mdl-menu__item.mdl-menu__item--selected {
+  background-color: $default-item-hover-bg-color; }
+
+
+// Alignment Over
+
+
+.mdl-menu__outline.mdl-menu--over {
+  -webkit-transform-origin: 0 0;
+  transform-origin: 0 0; }
+
+.mdl-menu.mdl-menu--over {
+  top: auto;
+  bottom: 0; }
+
+.mdl-menu.mdl-menu--over {
+  top: auto;
+  bottom: auto; }
+
+
+// Alignment Below
+
+
+.mdl-menu__outline.mdl-menu--below {
+  -webkit-transform-origin: 50% 0;
+  transform-origin: 50% 0;
+  min-width: 100%; }
+
+.mdl-menu__container.is-visible .mdl-menu__outline.mdl-menu--below {
+  -webkit-transform: scaleY(1);
+  transform: scaleY(1); }
+
+.mdl-menu__container .mdl-menu__outline.mdl-menu--below {
+  -webkit-transform: scaleY(0);
+  transform: scaleY(0); }
+
+.mdl-menu.mdl-menu--below {
+  min-width: 100%; }

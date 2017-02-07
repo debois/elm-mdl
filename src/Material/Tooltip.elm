@@ -447,7 +447,7 @@ type alias Store s =
 {-| Component react function
 -}
 react :
-    (Component.Msg button textfield menu layout toggles Msg tabs dispatch -> m)
+    (Component.Msg button textfield menu layout toggles Msg tabs select dispatch -> m)
     -> Msg
     -> Index
     -> Store s
@@ -459,7 +459,7 @@ react =
 {-| Component render.
 -}
 render :
-    (Component.Msg button textfield menu snackbar toggles Msg tabs dispatch -> m)
+    (Component.Msg button textfield menu snackbar toggles Msg tabs select dispatch -> m)
     -> Component.Index
     -> Store s
     -> List (Property m)
@@ -472,7 +472,7 @@ render =
 {-| Mouse enter event handler, Component variant
 -}
 onMouseEnter :
-    (Component.Msg button textfield menu snackbar toggles Msg tabs dispatch -> m)
+    (Component.Msg button textfield menu snackbar toggles Msg tabs select dispatch -> m)
     -> Component.Index
     -> Attribute m
 onMouseEnter lift idx =
@@ -484,7 +484,7 @@ onMouseEnter lift idx =
 {-| Mouse leave event handler, Component variant
 -}
 onMouseLeave :
-    (Component.Msg button textfield menu snackbar toggles Msg tabs dispatch -> m)
+    (Component.Msg button textfield menu snackbar toggles Msg tabs select dispatch -> m)
     -> Component.Index
     -> Attribute m
 onMouseLeave lift idx =
@@ -496,7 +496,7 @@ onMouseLeave lift idx =
 {-| Attach event handlers for Component version
 -}
 attach :
-    (Component.Msg button textfield menu snackbar toggles Msg tabs dispatch -> m)
+    (Component.Msg button textfield menu snackbar toggles Msg tabs select dispatch -> m)
     -> Component.Index
     -> Options.Property c m
 attach lift index =

@@ -224,9 +224,8 @@ container =
     option << (\style config -> { config | container = Many style :: config.container })
 
 
-
 dispatch
-  : (Component.Msg button textfield menu layout toggles tooltip tabs (List m) -> m)
+  : (Component.Msg button textfield menu layout toggles tooltip tabs select (List m) -> m)
     -> Property c m 
 dispatch lift =
     Lift (Json.map Component.Dispatch >> Json.map lift)
@@ -236,7 +235,7 @@ dispatch lift =
 -}
 inject
   : (a -> b -> List (Property c m) -> d)
-  -> (Component.Msg button textfield menu layout toggles tooltip tabs (List m) -> m)
+  -> (Component.Msg button textfield menu layout toggles tooltip tabs tabs (List m) -> m)
   -> a
   -> b
   -> List (Property c m)

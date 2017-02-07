@@ -179,6 +179,7 @@ import Material.Layout as Layout
 import Material.Toggles as Toggles
 import Material.Tooltip as Tooltip
 import Material.Tabs as Tabs
+import Material.Select as Select
 
 
 {-| Model encompassing all Material components.
@@ -192,6 +193,7 @@ type alias Model =
     , toggles : Indexed Toggles.Model
     , tooltip : Indexed Tooltip.Model
     , tabs : Indexed Tabs.Model
+    , select : Indexed Select.Model
     }
 
 
@@ -207,6 +209,7 @@ model =
     , toggles = Dict.empty
     , tooltip = Dict.empty
     , tabs = Dict.empty
+    , select = Dict.empty
     }
 
 
@@ -223,6 +226,7 @@ type alias Msg m =
         Toggles.Msg
         Tooltip.Msg
         Tabs.Msg
+        (Select.Msg m)
         (List m)
 
 
@@ -271,6 +275,9 @@ update_ lift msg store =
        TabsMsg idx msg ->
            Tabs.react lift msg idx store
 
+       SelectMsg idx msg ->
+           Select.react (SelectMsg idx >> lift) msg idx store
+
        Dispatch msgs -> 
            (Nothing, Dispatch.forward msgs)
 
@@ -303,7 +310,7 @@ Currently, only Layout and Menu require subscriptions, and only Layout require
 initialisation.
 -}
 subscriptions :
-    (Component.Msg button textfield (Menu.Msg m) Layout.Msg toggles tooltip tabs dispatch
+    (Component.Msg button textfield (Menu.Msg m) Layout.Msg toggles tooltip tabs (Select.Msg m) dispatch
      -> m
     )
     -> { model | mdl : Model }
@@ -312,13 +319,14 @@ subscriptions lift model =
     Sub.batch
         [ Layout.subs lift model.mdl
         , Menu.subs lift model.mdl
+        , Select.subs lift model.mdl
         ]
 
 
 {-| Initialisation. See `subscriptions` above.
 -}
 init :
-    (Component.Msg button textfield menu Layout.Msg toggles tooltip tabs dispatch -> m)
+    (Component.Msg button textfield menu Layout.Msg toggles tooltip tabs select dispatch -> m)
     -> Cmd m
 init lift =
     Layout.sub0 lift

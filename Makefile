@@ -38,6 +38,11 @@ pages :
 	(cd demo; elm-make Demo.elm --output ../$(PAGES)/elm.js)
 	(cd $(PAGES); git commit -am "Update."; git push origin gh-pages)
 
+# Note: requires https://github.com/google/material-design-lite in
+# ./material-design-lite
+css: styles/select.scss
+	sassc styles/select.scss > styles/select.css
+
 cleanish :
 	rm -f elm.js index.html docs.json
 

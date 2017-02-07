@@ -405,7 +405,7 @@ type alias Store s =
 {-| Component react function (update variant). Internal use only.
 -}
 react :
-    (Component.Msg Msg textfield menu layout toggles tooltip tabs dispatch -> m)
+    (Component.Msg Msg textfield menu layout toggles tooltip tabs select dispatch -> m)
     -> Msg
     -> Index
     -> Store s
@@ -425,7 +425,7 @@ indicated in `Material` and a user message `PollMsg`.
       [ text "Fetch new" ]
 -}
 render :
-    (Component.Msg Msg textfield menu snackbar toggles tooltip tabs dispatch -> m)
+    (Component.Msg Msg textfield menu snackbar toggles tooltip tabs select dispatch -> m)
     -> Index
     -> { a | button : Indexed Ripple.Model }
     -> List (Property m)
