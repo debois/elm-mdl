@@ -6,6 +6,8 @@ module Material.Dropdown
         , bottomRight
         , topLeft
         , topRight
+        , over
+        , below
         , index
 
         , Item
@@ -224,9 +226,9 @@ update fwd msg model =
                 input =
                     g.button.bounds
             in
-                if (model.open && not (inside pos container || inside pos input)) then
+                if model.open && not (inside pos container) then
                     update fwd Close model
-                else
+                  else
                     model ! []
 
         Key defaultIndex summaries keyCode g ->
@@ -342,6 +344,8 @@ type Alignment
     | BottomRight
     | TopLeft
     | TopRight
+    | Over
+    | Below
 
 
 {-| Default configuration.
@@ -391,6 +395,22 @@ topLeft =
 topRight : Property m
 topRight =
     Internal.option (\config -> { config | alignment = TopRight })
+
+
+{-| Menu extends from the rop-right of the icon and opens inwards.
+(Suitable for Select.)
+-}
+over : Property m
+over =
+    Internal.option (\config -> { config | alignment = Over })
+
+
+{-| Menu opens below and extends downwards.
+(Suitable for Select.)
+-}
+below : Property m
+below =
+    Internal.option (\config -> { config | alignment = Below })
 
 
 {-| Menu extends from the rop-right of the icon.
@@ -470,6 +490,26 @@ containerGeometry alignment geometry =
                 in
                     right geometry.container - right geometry.menu |> Just
             }
+        Over ->
+            { top =
+                  Just 0
+            , left =
+                  Just (geometry.button.bounds.width - geometry.menu.bounds.width)
+            , bottom =
+                  Nothing
+            , right =
+                  Nothing
+            }
+        Below ->
+            { top =
+                  Just (geometry.button.bounds.height + 20)
+            , left =
+                  Just 0
+            , bottom =
+                  Nothing
+            , right =
+                  Just 0
+            }
 
 
 applyContainerGeometry : Alignment -> Geometry -> Options.Style m
@@ -486,7 +526,7 @@ applyContainerGeometry alignment g =
     , css "bottom" (f r.bottom)
     , css "left" (f r.left)
     , css "right" (f r.right)
-    , css "width" (g.menu.bounds.width |> toPx)
+    , css "width" (if alignment == Below then "100%" else (g.menu.bounds.width |> toPx))
     , css "height" (g.menu.bounds.height |> toPx)
     ]
     |> Options.many
@@ -503,7 +543,10 @@ clip model alignment g =
     in
         css "clip" <|
         if model.open then
-            rect 0 width height 0
+            if alignment == Below then
+                rect 0 g.button.bounds.width height 0
+            else
+                rect 0 width height 0
           else
             case alignment of
 
@@ -560,6 +603,12 @@ view lift model properties items =
                 TopRight ->
                     cs "mdl-menu--top-right"
 
+                Over ->
+                    cs "mdl-menu--over"
+
+                Below ->
+                    cs "mdl-menu--below"
+
         ({ config } as summary) =
             Internal.collect defaultConfig properties
 
@@ -596,7 +645,8 @@ view lift model properties items =
         [ styled Html.div
             [ cs "mdl-menu__outline"
             , alignment
-            , when model.open (css "width" <| toPx menu.width)
+            , when (model.open && (config.alignment /= Below))
+                (css "width" <| toPx menu.width)
             , when model.open (css "height" <| toPx menu.height)
             ]
             []

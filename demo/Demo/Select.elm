@@ -85,7 +85,6 @@ view model =
                         (\string ->
                             Select.item
                                 [ Item.onSelect (Select 0 string)
-                                , Item.ripple
                                 ]
                                 [ text string
                                 ]
@@ -108,7 +107,6 @@ view model =
             |> List.map (\\string ->
                  Select.item
                  [ Item.onSelect (Select string)
-                 , Item.ripple
                  ]
                  [ text string
                  ]
@@ -235,6 +233,54 @@ view model =
                  )
             )
         """
+            ]
+        ]
+
+    , Html.h4 [] [ text "Opens below and full width" ]
+    , Grid.grid []
+        [ Grid.cell column
+            [ Select.render Mdl
+                [ 0 ]
+                model.mdl
+                [ Select.value (Maybe.withDefault "" (Dict.get 0 model.values))
+                , Select.below
+                ]
+                ([ "allosaurus"
+                 , "brontosaurus"
+                 , "carcharodontosaurus"
+                 , "diplodocus"
+                 ]
+                    |> List.map
+                        (\string ->
+                            Select.item
+                                [ Item.onSelect (Select 0 string)
+                                ]
+                                [ text string
+                                ]
+                        )
+                )
+            ]
+        , Grid.cell column
+            [ Code.code [] """
+Select.render Mdl [ 0 ] model.mdl 
+    [ Select.value (Maybe.withDefault "" (Dict.get 0 model.values))
+    , Select.below
+    ]
+    ([ "allosaurus"
+     , "brontosaurus"
+     , "carcharodontosaurus"
+     , "diplodocus"
+     ]
+        |> List.map
+            (\\string ->
+                Select.item
+                    [ Item.onSelect (Select 0 string)
+                    ]
+                    [ text string
+                    ]
+            )
+    )
+              """
             ]
         ]
     ]

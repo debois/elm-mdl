@@ -10,6 +10,8 @@ module Material.Select
         , autofocus
         , ripple
         , index
+        , over
+        , below
         
         , Item
         , item
@@ -104,7 +106,7 @@ import String
 subscriptions : Model -> Sub (Msg m)
 subscriptions model =
     if model.dropdown.open then
-        Mouse.clicks (Dropdown.Click Dropdown.BottomRight >> MenuMsg)
+        Mouse.clicks (Dropdown.Click Dropdown.Over >> MenuMsg)
     else
         Sub.none
 
@@ -264,6 +266,20 @@ index =
     dropdownOption << Dropdown.index
 
 
+{-| Select opens over the input. (Default behavior)
+-}
+over : Property m
+over =
+    dropdownOption Dropdown.over
+
+
+{-| Select opens below the input.
+-}
+below : Property m
+below =
+    dropdownOption Dropdown.below
+
+
 {-| Select shows `s` as the selected value.
 -}
 value : String -> Property m
@@ -404,7 +420,11 @@ view lift model properties items =
           ]
 
         dropdown =
-          Dropdown.view (MenuMsg >> lift) model.dropdown dropdownOptions items
+          Dropdown.view
+              (MenuMsg >> lift)
+              model.dropdown
+              ( Dropdown.over :: dropdownOptions )
+              items
     in
         Internal.apply summary div
             ( cs "mdl-select"
