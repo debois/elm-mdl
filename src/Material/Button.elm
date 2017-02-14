@@ -204,7 +204,7 @@ accent =
 {-| Sets the type of the button e.g.
 
     Button.render ...
-      [ Button.type' "submit"
+      [ Button.type_ "submit"
       ]
       [ ... ]
 -}
