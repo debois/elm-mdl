@@ -6,7 +6,7 @@ import Html.Events
 import Set exposing (Set)
 import String
 
-import Material.List as Lists
+import Material.List as List
 import Material
 import Material.Options as Options exposing (when, css)
 import Material.Icon as Icon
@@ -81,16 +81,16 @@ withCode = flip (,)
 
 basic : Model -> (Html Msg, String)
 basic model =
-  Lists.ul [ css "margin" "0", css "padding" "0" ]
-    [ Lists.li [] [ Lists.content [] [ text "Elm" ] ]
-    , Lists.li [] [ Lists.content [] [ text "F#" ] ]
-    , Lists.li [] [ Lists.content [] [ text "Lisp" ] ]
+  List.ul [ css "margin" "0", css "padding" "0" ]
+    [ List.li [] [ List.content [] [ text "Elm" ] ]
+    , List.li [] [ List.content [] [ text "F#" ] ]
+    , List.li [] [ List.content [] [ text "Lisp" ] ]
     ]
   |> withCode """
-   Lists.ul []
-    [ Lists.li [] [ Lists.content [] [ text "Elm" ] ]
-    , Lists.li [] [ Lists.content [] [ text "F#" ] ]
-    , Lists.li [] [ Lists.content [] [ text "Lisp" ] ]
+   List.ul []
+    [ List.li [] [ List.content [] [ text "Elm" ] ]
+    , List.li [] [ List.content [] [ text "F#" ] ]
+    , List.li [] [ List.content [] [ text "Lisp" ] ]
     ]
   """
 
@@ -159,43 +159,43 @@ click model =
 
 icons : a -> ( Html b, String )
 icons model =
-  Lists.ul [ css "margin" "0", css "padding" "0" ]
-    [ Lists.li []
-        [ Lists.content [] 
-            [ Lists.icon "inbox" []
+  List.ul [ css "margin" "0", css "padding" "0" ]
+    [ List.li []
+        [ List.content [] 
+            [ List.icon "inbox" []
             , text "Inbox"
             ]
         ]
-    , Lists.li []
-        [ Lists.content [] 
-            [ Lists.icon "send" []
+    , List.li []
+        [ List.content [] 
+            [ List.icon "send" []
             , text "Sent mail"
             ]
         ]
-    , Lists.li []
-        [ Lists.content [] 
-            [ Lists.icon "delete" []
+    , List.li []
+        [ List.content [] 
+            [ List.icon "delete" []
             , text "Trash"
             ]
         ]
     ]
   |> withCode """
-  Lists.ul []
-    [ Lists.li []
-        [ Lists.content [] 
-            [ Lists.icon "inbox" []
+  List.ul []
+    [ List.li []
+        [ List.content [] 
+            [ List.icon "inbox" []
             , text "Inbox"
             ]
         ]
-    , Lists.li []
-        [ Lists.content [] 
-            [ Lists.icon "send" []
+    , List.li []
+        [ List.content [] 
+            [ List.icon "send" []
             , text "Sent mail"
             ]
         ]
-    , Lists.li []
-        [ Lists.content [] 
-            [ Lists.icon "delete" []
+    , List.li []
+        [ List.content [] 
+            [ List.icon "delete" []
             , text "Trash"
             ]
         ]
@@ -204,43 +204,43 @@ icons model =
 
 avatars : Model -> (Html Msg, String)
 avatars model =
-  Lists.ul [ css "margin" "0", css "padding" "0" ]
-    [ Lists.li []
-        [ Lists.content []
-            [ Lists.avatarImage "assets/images/christoffer.jpg" []
+  List.ul [ css "margin" "0", css "padding" "0" ]
+    [ List.li []
+        [ List.content []
+            [ List.avatarImage "assets/images/christoffer.jpg" []
             , text "Christoffer Wilhelm Eckersberg"
             ]
         ]
-     , Lists.li []
-        [ Lists.content []
-            [ Lists.avatarImage "assets/images/edvard.jpg" []
+     , List.li []
+        [ List.content []
+            [ List.avatarImage "assets/images/edvard.jpg" []
             , text "Edvard Munch"
             ]
         ]
-     , Lists.li []
-        [ Lists.content []
-            [ Lists.avatarImage "assets/images/peder.jpg" []
+     , List.li []
+        [ List.content []
+            [ List.avatarImage "assets/images/peder.jpg" []
             , text "Peder Severin Krøyer"
             ]
         ]
     ]
   |> withCode """
-  Lists.ul []
-    [ Lists.li []
-        [ Lists.content []
-            [ Lists.avatarImage "assets/christoffer.jpg" []
+  List.ul []
+    [ List.li []
+        [ List.content []
+            [ List.avatarImage "assets/christoffer.jpg" []
             , text "Christoffer Wilhelm Eckersberg"
             ]
         ]
-     , Lists.li []
-        [ Lists.content []
-            [ Lists.avatarImage "assets/edvard.jpg" []
+     , List.li []
+        [ List.content []
+            [ List.avatarImage "assets/edvard.jpg" []
             , text "Edvard Munch"
             ]
         ]
-     , Lists.li []
-        [ Lists.content []
-            [ Lists.avatarImage "assets/peder.jpg" []
+     , List.li []
+        [ List.content []
+            [ List.avatarImage "assets/peder.jpg" []
             , text "Peder Severin Krøyer"
             ]
         ]
@@ -250,43 +250,43 @@ avatars model =
 
 avatarsWithIcons : Model -> (Html Msg, String)
 avatarsWithIcons model =
-  Lists.ul [ css "margin" "0", css "padding" "0" ]
-    [ Lists.li []
-        [ Lists.content [] 
-            [ Lists.avatarIcon "photo_camera" []
+  List.ul [ css "margin" "0", css "padding" "0" ]
+    [ List.li []
+        [ List.content [] 
+            [ List.avatarIcon "photo_camera" []
             , text "Henri Cartier-Bresson"
             ]
         ]
-    , Lists.li []
-        [ Lists.content []
-            [ Lists.avatarIcon "format_paint" [] 
+    , List.li []
+        [ List.content []
+            [ List.avatarIcon "format_paint" [] 
             , text "Vincent Willem van Gogh"
             ]
         ]
-     , Lists.li []
-        [ Lists.content []
-            [ Lists.avatarIcon "assistant_photo" [] 
+     , List.li []
+        [ List.content []
+            [ List.avatarIcon "assistant_photo" [] 
             , text "Horatio Nelson"
             ]
         ]
     ]
   |> withCode """
-   Lists.ul []
-    [ Lists.li []
-        [ Lists.content [] 
-            [ Lists.avatarIcon "photo_camera" []
+   List.ul []
+    [ List.li []
+        [ List.content [] 
+            [ List.avatarIcon "photo_camera" []
             , text "Henri Cartier-Bresson"
             ]
         ]
-    , Lists.li []
-        [ Lists.content []
-            [ Lists.avatarIcon "format_paint" [] 
+    , List.li []
+        [ List.content []
+            [ List.avatarIcon "format_paint" [] 
             , text "Vincent Willem van Gogh"
             ]
         ]
-     , Lists.li []
-        [ Lists.content []
-            [ Lists.avatarIcon "assistant_photo" [] 
+     , List.li []
+        [ List.content []
+            [ List.avatarIcon "assistant_photo" [] 
             , text "Horatio Nelson"
             ]
         ]
@@ -319,17 +319,17 @@ secondaryAction1 model =
         ]
         [ Icon.i "star" ]
   in 
-    Lists.ul [ css "margin" "0", css "padding" "0" ] 
-      [ Lists.li []
-          [ Lists.content [] [ text "Alan Turing" ] 
+    List.ul [ css "margin" "0", css "padding" "0" ] 
+      [ List.li []
+          [ List.content [] [ text "Alan Turing" ] 
           , star model 0
           ]
-      , Lists.li []
-          [ Lists.content [] [ text "Kurt Friedrich Gödel" ]
+      , List.li []
+          [ List.content [] [ text "Kurt Friedrich Gödel" ]
           , star model 1
           ]
-      , Lists.li []
-          [ Lists.content [] [ text "Georg Ferdinand Ludwig Philipp Cantor" ] 
+      , List.li []
+          [ List.content [] [ text "Georg Ferdinand Ludwig Philipp Cantor" ] 
           , star model 2
           ]
       ]
@@ -343,17 +343,17 @@ secondaryAction1 model =
         ]
         [ Icon.i "star" ]
   in 
-    Lists.ul [] 
-      [ Lists.li []
-          [ Lists.content [] [ text "Alan Turing" ] 
+    List.ul [] 
+      [ List.li []
+          [ List.content [] [ text "Alan Turing" ] 
           , star model 0
           ]
-      , Lists.li []
-          [ Lists.content [] [ text "Kurt Friedrich Gödel" ]
+      , List.li []
+          [ List.content [] [ text "Kurt Friedrich Gödel" ]
           , star model 1
           ]
-      , Lists.li []
-          [ Lists.content [] [ text "Georg Ferdinand Ludwig Philipp Cantor" ] 
+      , List.li []
+          [ List.content [] [ text "Georg Ferdinand Ludwig Philipp Cantor" ] 
           , star model 2
           ]
       ]    
@@ -363,10 +363,10 @@ secondaryAction2 : Model -> (Html Msg, String)
 secondaryAction2 model = 
   let 
     list = 
-      Lists.ul [ css "margin" "0", css "padding" "0" ]
-        [ Lists.li []
-            [ Lists.content [] [ text "Include checkbox?" ]
-            , Lists.content2 [] 
+      List.ul [ css "margin" "0", css "padding" "0" ]
+        [ List.li []
+            [ List.content [] [ text "Include checkbox?" ]
+            , List.content2 [] 
                 [ Toggles.checkbox Mdl [4] model.mdl
                     [ Toggles.value (Set.member 4 model.toggles) 
                     , Toggles.onClick (Flip 4)
@@ -374,11 +374,11 @@ secondaryAction2 model =
                     []
                 ]
             ]
-        , Lists.li []
-            [ Lists.content [] [ text "Radio button!" ]
-            , Lists.content2 [] 
+        , List.li []
+            [ List.content [] [ text "Radio button!" ]
+            , List.content2 [] 
                 [ Options.span 
-                    [Lists.action2]
+                    [List.action2]
                     [ Toggles.radio Mdl [5] model.mdl
                         [ Toggles.value (Set.member 5 model.toggles)
                         , Toggles.onClick (Flip 5)
@@ -388,9 +388,9 @@ secondaryAction2 model =
                     ]
                 ]
             ]
-        , Lists.li []
-            [ Lists.content [] [ text "Include switch?" ] 
-            , Lists.content2 [] 
+        , List.li []
+            [ List.content [] [ text "Include switch?" ] 
+            , List.content2 [] 
                 [ Toggles.switch Mdl [6] model.mdl
                     [ Toggles.value (Set.member 6 model.toggles)
                     , Toggles.onClick (Flip 6)
@@ -402,10 +402,10 @@ secondaryAction2 model =
   in
     comment list "Note the incantations necessary to get Radio Button positioning correct." 
       |> withCode """
-  Lists.ul []
-    [ Lists.li []
-        [ Lists.content [] [ text "Include checkbox?" ]
-        , Lists.content2 [] 
+  List.ul []
+    [ List.li []
+        [ List.content [] [ text "Include checkbox?" ]
+        , List.content2 [] 
             [ Toggles.checkbox Mdl [4] model.mdl
                 [ Toggles.value (Set.member 4 model.toggles) 
                 , Toggles.onClick (Flip 4)
@@ -413,11 +413,11 @@ secondaryAction2 model =
                 []
             ]
         ]
-    , Lists.li []
-        [ Lists.content [] [ text "Radio button!" ]
-        , Lists.content2 [] 
+    , List.li []
+        [ List.content [] [ text "Radio button!" ]
+        , List.content2 [] 
             [ Options.span 
-                [Lists.action2]
+                [List.action2]
                 [ Toggles.radio Mdl [5] model.mdl
                     [ Toggles.value (Set.member 5 model.toggles)
                     , Toggles.onClick (Flip 5)
@@ -427,9 +427,9 @@ secondaryAction2 model =
                 ]
             ]
         ]
-    , Lists.li []
-        [ Lists.content [] [ text "Include switch?" ] 
-        , Lists.content2 [] 
+    , List.li []
+        [ List.content [] [ text "Include switch?" ] 
+        , List.content2 [] 
             [ Toggles.switch Mdl [6] model.mdl
                 [ Toggles.value (Set.member 6 model.toggles)
                 , Toggles.onClick (Flip 6)
@@ -443,47 +443,47 @@ secondaryAction2 model =
 
 info : Model -> (Html Msg, String)
 info model = 
-  Lists.ul [ css "margin" "0", css "padding" "0" ] 
-    [ Lists.li []
-        [ Lists.content [] [ text "MacBook" ] 
-        , Lists.content2 [] 
-            [ Lists.info2 [] [ text "New" ]
+  List.ul [ css "margin" "0", css "padding" "0" ] 
+    [ List.li []
+        [ List.content [] [ text "MacBook" ] 
+        , List.content2 [] 
+            [ List.info2 [] [ text "New" ]
             , Icon.view "info" [ Color.text Color.primary ]
             ]
         ]
-    , Lists.li []
-        [ Lists.content [] [ text "iMac \"27" ] 
-        , Lists.content2 [] 
-            [ Lists.info2 [] [ text "Updated" ]
+    , List.li []
+        [ List.content [] [ text "iMac \"27" ] 
+        , List.content2 [] 
+            [ List.info2 [] [ text "Updated" ]
             , Icon.view "info" [ Color.text Color.primary ]
             ]
         ]
-    , Lists.li []
-        [ Lists.content [] [ text "Mac Pro" ] 
-        , Lists.content2 [] 
+    , List.li []
+        [ List.content [] [ text "Mac Pro" ] 
+        , List.content2 [] 
             [ Icon.view "info" [ Color.text Color.primary ]
             ]
         ]
     ]
       |> withCode """
-  Lists.ul [] 
-    [ Lists.li []
-        [ Lists.content [] [ text "MacBook" ] 
-        , Lists.content2 [] 
-            [ Lists.info2 [] [ text "New" ]
+  List.ul [] 
+    [ List.li []
+        [ List.content [] [ text "MacBook" ] 
+        , List.content2 [] 
+            [ List.info2 [] [ text "New" ]
             , Icon.view "info" [ Color.text Color.primary ]
             ]
         ]
-    , Lists.li []
-        [ Lists.content [] [ text "iMac \"27" ] 
-        , Lists.content2 [] 
-            [ Lists.info2 [] [ text "Updated" ]
+    , List.li []
+        [ List.content [] [ text "iMac \"27" ] 
+        , List.content2 [] 
+            [ List.info2 [] [ text "Updated" ]
             , Icon.view "info" [ Color.text Color.primary ]
             ]
         ]
-    , Lists.li []
-        [ Lists.content [] [ text "Mac Pro" ] 
-        , Lists.content2 [] 
+    , List.li []
+        [ List.content [] [ text "Mac Pro" ] 
+        , List.content2 [] 
             [ Icon.view "info" [ Color.text Color.primary ]
             ]
         ]
@@ -492,46 +492,46 @@ info model =
 
 subtitle : Model -> (Html Msg, String)
 subtitle model = 
-  Lists.ul [ css "margin" "0", css "padding" "0" ]
-    [ Lists.li [ Lists.withSubtitle ]
-        [ Lists.content [] 
+  List.ul [ css "margin" "0", css "padding" "0" ]
+    [ List.li [ List.withSubtitle ]
+        [ List.content [] 
             [ text "Mark Wright" 
-            , Lists.subtitle [] [ text "4.02m (June 8, 1912)" ]
+            , List.subtitle [] [ text "4.02m (June 8, 1912)" ]
             ]
         ]
-    , Lists.li [ Lists.withSubtitle ]
-        [ Lists.content [] 
+    , List.li [ List.withSubtitle ]
+        [ List.content [] 
             [ text "Kjell Isaksson" 
-            , Lists.subtitle [] [ text "5.51m (April 8, 1972)" ]
+            , List.subtitle [] [ text "5.51m (April 8, 1972)" ]
             ]
         ]
-    , Lists.li [ Lists.withSubtitle ]
-        [ Lists.content [] 
+    , List.li [ List.withSubtitle ]
+        [ List.content [] 
           [ text "Sergey Bubka" 
-          , Lists.subtitle [] [ text "6.14m (July 31, 1994)" ]
+          , List.subtitle [] [ text "6.14m (July 31, 1994)" ]
           ]
         ]
     ]
       |> flip comment """Note that subtitle and body are mutually exclusive.
-                         Note also the required Lists.withSubtitle argument to Lists.li."""
+                         Note also the required List.withSubtitle argument to List.li."""
       |> withCode """
-  Lists.ul []
-    [ Lists.li [ Lists.withSubtitle ] -- NB! Required on every Lists.li containing subtitle.
-        [ Lists.content [] 
+  List.ul []
+    [ List.li [ List.withSubtitle ] -- NB! Required on every List.li containing subtitle.
+        [ List.content [] 
             [ text "Mark Wright" 
-            , Lists.subtitle [] [ text "4.02m (June 8, 1912)" ]
+            , List.subtitle [] [ text "4.02m (June 8, 1912)" ]
             ]
         ]
-    , Lists.li [ Lists.withSubtitle ] 
-        [ Lists.content [] 
+    , List.li [ List.withSubtitle ] 
+        [ List.content [] 
             [ text "Kjell Isaksson" 
-            , Lists.subtitle [] [ text "5.51m (April 8, 1972)" ]
+            , List.subtitle [] [ text "5.51m (April 8, 1972)" ]
             ]
         ]
-    , Lists.li [ Lists.withSubtitle ]
-        [ Lists.content [] 
+    , List.li [ List.withSubtitle ]
+        [ List.content [] 
           [ text "Sergey Bubka" 
-          , Lists.subtitle [] [ text "6.14m (July 31, 1994)" ]
+          , List.subtitle [] [ text "6.14m (July 31, 1994)" ]
           ]
         ]
     ]
@@ -540,11 +540,11 @@ subtitle model =
 
 body : Model -> (Html Msg, String)
 body model = 
-  Lists.ul [ css "margin" "0", css "padding" "0" ]
-    [ Lists.li [ Lists.withBody ] -- NB! Required on every Lists.li containing body. 
-        [ Lists.content [] 
+  List.ul [ css "margin" "0", css "padding" "0" ]
+    [ List.li [ List.withBody ] -- NB! Required on every List.li containing body. 
+        [ List.content [] 
             [ text "Robert Frost"
-            , Lists.body [] [ text """ 
+            , List.body [] [ text """ 
 I shall be telling this with a sigh /
 Somewhere ages and ages hence: /
 Two roads diverged in a wood, and I— /
@@ -552,10 +552,10 @@ I took the one less traveled by, /
 And that has made all the difference.  """ ]
             ]
         ]
-    , Lists.li [ Lists.withBody ]
-        [ Lists.content [] 
+    , List.li [ List.withBody ]
+        [ List.content [] 
             [ text "Errett Bishop"
-            , Lists.body [] [ text """
+            , List.body [] [ text """
 And yet there is dissatisfaction in the mathematical community. 
 The pure mathematician is isolated from the world, which has 
 little need of his brilliant creations. He suffers from an 
@@ -564,10 +564,10 @@ and it has led him out of this world.
               """ ]
             ]
         ]
-    , Lists.li [ Lists.withBody ]
-        [ Lists.content [] 
+    , List.li [ List.withBody ]
+        [ List.content [] 
           [ text "Hunter Stockton Thompson"
-          , Lists.body [] [ text """
+          , List.body [] [ text """
 We were somewhere around Barstow on the edge of the desert when the drugs began
 to take hold. I remember saying something like »I feel a bit lightheaded; maybe
 you should drive...« """ ]
@@ -575,26 +575,26 @@ you should drive...« """ ]
         ]
     ]
       |> flip comment """Note that body and subtitle are mutually exclusive.
-                         Note also the required Lists.withBody argument to Lists.li."""
+                         Note also the required List.withBody argument to List.li."""
       |> withCode """
-   Lists.ul []
-    [ Lists.li [ Lists.withBody ] -- NB! Required on every Lists.li containing body. 
-        [ Lists.content [] 
+   List.ul []
+    [ List.li [ List.withBody ] -- NB! Required on every List.li containing body. 
+        [ List.content [] 
             [ text \"Robert Frost\"
-            , Lists.body [] [ text "I shall be telling this with a sigh / Somewhere ages and ages hence: / Two roads diverged in a wood, and I— / I took the one less traveled by, / And that has made all the difference." ]
+            , List.body [] [ text "I shall be telling this with a sigh / Somewhere ages and ages hence: / Two roads diverged in a wood, and I— / I took the one less traveled by, / And that has made all the difference." ]
             ]
         ]
-    , Lists.li [ Lists.withBody ]
-        [ Lists.content [] 
+    , List.li [ List.withBody ]
+        [ List.content [] 
             [ text \"Errett Bishop\"
-            , Lists.body [] [ text "And yet there is dissatisfaction in the mathematical community.  The pure mathematician is isolated from the world, which has little need of his brilliant creations. He suffers from an alienation which is seemingly inevitable: he has followed the gleam and it has led him out of this world." 
+            , List.body [] [ text "And yet there is dissatisfaction in the mathematical community.  The pure mathematician is isolated from the world, which has little need of his brilliant creations. He suffers from an alienation which is seemingly inevitable: he has followed the gleam and it has led him out of this world." 
               ]
             ]
         ]
-    , Lists.li [ Lists.withBody ]
-        [ Lists.content [] 
+    , List.li [ List.withBody ]
+        [ List.content [] 
           [ text \"Hunter Stockton Thompson\"
-          , Lists.body [] [ text "We were somewhere around Barstow on the edge of the desert when the drugs began to take hold. I remember saying something like »I feel a bit lightheaded; maybe you should drive...« " ]
+          , List.body [] [ text "We were somewhere around Barstow on the edge of the desert when the drugs began to take hold. I remember saying something like »I feel a bit lightheaded; maybe you should drive...« " ]
           ]
         ]
     ]
@@ -644,7 +644,7 @@ box (letter, hue) =
 
 train : ( (Char, Color.Hue), String, a, String, Maybe String ) -> Html b
 train ((letter, hue), dest, track, time, msg) = 
-  Lists.li [ Lists.withSubtitle ] 
+  List.li [ List.withSubtitle ] 
     [ Options.div 
         [ Options.center
         , Color.background (Color.color hue Color.S500) 
@@ -655,12 +655,12 @@ train ((letter, hue), dest, track, time, msg) =
         , css "margin-right" "2rem"
         ] 
         [text (String.fromChar letter)]
-    , Lists.content [] 
+    , List.content [] 
         [ Options.span [] [ text dest ]
-        , Lists.subtitle [] [ text ("Track " ++ toString track) ]
+        , List.subtitle [] [ text ("Track " ++ toString track) ]
         ]
-    , Helpers.filter Lists.content2 [] 
-        [ msg |> Maybe.map (\m -> Lists.info2 [] [ text m ])
+    , Helpers.filter List.content2 [] 
+        [ msg |> Maybe.map (\m -> List.info2 [] [ text m ])
         , text time |> Just
         ]
     ]
@@ -668,7 +668,7 @@ train ((letter, hue), dest, track, time, msg) =
 
 schedule : Html Msg
 schedule = 
-  Lists.ul [ css "margin" "0", css "padding" "0" ] (List.map train trains)
+  List.ul [ css "margin" "0", css "padding" "0" ] (List.map train trains)
 
 
 type File = Folder | File
@@ -688,14 +688,14 @@ files =
 
 git : ( File, String, String, String, Color.Hue, Maybe Bool ) -> Html a
 git (typ, name, modified, by, hue, x) = 
-  Lists.li 
-    [ Lists.withSubtitle ] 
-    [ Lists.content [] 
-        [ Lists.avatarIcon 
+  List.li 
+    [ List.withSubtitle ] 
+    [ List.content [] 
+        [ List.avatarIcon 
             (if typ == Folder then "folder" else "insert_drive_file") 
             [ Color.background (Color.color hue Color.S500) ]
         , text name
-        , Lists.subtitle []
+        , List.subtitle []
             [ Options.span [] [ text <| modified ++ " by " ++ by ] ]
         ]
     , case x of 
@@ -708,7 +708,7 @@ git (typ, name, modified, by, hue, x) =
 
 commits : Html a
 commits = 
-  Lists.ul [ css "margin" "0", css "padding" "0" ]
+  List.ul [ css "margin" "0", css "padding" "0" ]
     (List.map git files)
 
 
@@ -728,18 +728,18 @@ mail model idx (name, img, subj, date, txt) =
     k = idx + 7
     starred = Set.member k model.toggles
   in
-    Lists.li [ Lists.withBody ]
-      [ Lists.content []
-          [ Lists.avatarImage ("assets/images/" ++ img) []
+    List.li [ List.withBody ]
+      [ List.content []
+          [ List.avatarImage ("assets/images/" ++ img) []
           , text subj
-          , Lists.body []
+          , List.body []
               [ Options.span [ css "font-weight" "600" ] [ text name ]
               , Options.span [] [ text "—" ]
               , Options.span [] [ text txt ]
               ]
           ]
-      , Lists.content2 [] 
-          [ Lists.info2 [] [ text date ]
+      , List.content2 [] 
+          [ List.info2 [] [ text date ]
           , Button.render Mdl [k] model.mdl
               [ Button.icon 
               , Button.onClick (Flip k)
@@ -752,7 +752,7 @@ mail model idx (name, img, subj, date, txt) =
 
 inbox : Model -> Html Msg
 inbox model = 
-  Lists.ul [ css "margin" "0", css "padding" "0" ] (List.indexedMap (mail model) mails)
+  List.ul [ css "margin" "0", css "padding" "0" ] (List.indexedMap (mail model) mails)
 
 
 demoList : String -> (Html Msg, String) -> List (Grid.Cell Msg)
@@ -812,13 +812,13 @@ view model =
             ]
         ]
   in
-    Page.body1' "Lists" srcUrl intro references [demo] docs
+    Page.body1' "List" srcUrl intro references [demo] docs
 
 
 intro : Html m
 intro =
     Page.fromMDL "https://www.getmdl.io/components/index.html#lists-section" """
-> Lists present multiple line items vertically as a single continuous element.
+> List present multiple line items vertically as a single continuous element.
 > Refer to the [Material Design
 Spec](https://material.google.com/components/lists.html) to know more about the
 content options.  """
