@@ -217,7 +217,7 @@ hide device =
                 ""
 
             _ ->
-                "mdl-cell--hide-" ++ suffix device
+                "mdl-cell--hide" ++ suffix device
 
 
 {-| Specify that a cell should re-order itself to position 'Int' on `Device`.
