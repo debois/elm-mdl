@@ -168,11 +168,15 @@ textfields model =
       , Textfield.render Mdl
             [ 0 ]
             model.mdl
-            [ Options.onInput Upd0 ]
+            [ Options.onInput Upd0
+            , Textfield.value model.str0
+            ]
             []
       , """
         Textfield.render Mdl [0] model.mdl
-          [ Options.onInput Upd0 ]
+          [ Options.onInput Upd0
+          , Textfield.value model.str0
+          ]
           []
        """
       )
@@ -358,6 +362,7 @@ textfields model =
                         ++ " char limit)"
                     )
                 , Options.onInput Upd6
+                , Textfield.value model.str6
                 , Textfield.textarea
                 , Textfield.maxlength (truncate model.length)
                 , Textfield.floatingLabel
@@ -385,6 +390,7 @@ textfields model =
                 ++ " of " ++ (toString (truncate model.length))
                 ++ " char limit)")
          , Options.onInput Upd6
+         , Textfield.value model.str6
          , Textfield.textarea
          , Textfield.maxlength (truncate model.length)
          , Textfield.floatingLabel
