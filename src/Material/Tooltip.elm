@@ -474,9 +474,9 @@ render =
 onMouseEnter :
     (Component.Msg button textfield menu snackbar toggles Msg tabs dispatch -> m)
     -> Component.Index
-    -> Attribute m
+    -> Options.Property c m
 onMouseEnter lift idx =
-    Html.Events.on
+    Options.on
         "mouseenter"
         (Json.map (Enter >> Component.TooltipMsg idx >> lift) stateDecoder)
 
@@ -486,9 +486,9 @@ onMouseEnter lift idx =
 onMouseLeave :
     (Component.Msg button textfield menu snackbar toggles Msg tabs dispatch -> m)
     -> Component.Index
-    -> Attribute m
+    -> Options.Property c m
 onMouseLeave lift idx =
-    Html.Events.on
+    Options.on
         "mouseleave"
         (Json.succeed (Leave |> Component.TooltipMsg idx |> lift))
 
@@ -501,8 +501,8 @@ attach :
     -> Options.Property c m
 attach lift index =
     Options.many
-        [ Internal.attribute <| onMouseEnter lift index
-        , Internal.attribute <| onMouseLeave lift index
+        [ onMouseEnter lift index
+        , onMouseLeave lift index
         ]
 
 
