@@ -40,6 +40,7 @@ for a live demo.
 
 import Html exposing (Attribute, Html)
 import Html.Attributes
+import Html.Events
 import Material.Options as Options exposing (cs)
 import Material.Icon as Icon
 import Material.Options.Internal as Internal
@@ -106,11 +107,18 @@ NOTE. This stops propagation and prevents default to stop `onClick` from being
 called when this is clicked.
 -}
 deleteClick : msg -> Property msg
-deleteClick msg =
-    Options.onWithOptions
-      "click" 
-       { stopPropagation = True, preventDefault = True }
-       (Json.succeed msg)
+deleteClick =
+    Internal.option
+        << (\msg config ->
+                { config
+                    | deleteClick =
+                        Just
+                            (Html.Events.onWithOptions "click"
+                                { stopPropagation = True, preventDefault = True }
+                                (Json.succeed msg)
+                            )
+                }
+           )
 
 type alias Priority =
     Int
