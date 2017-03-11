@@ -367,7 +367,10 @@ fab =
 -}
 minifab : Property m
 minifab =
-    cs "mdl-button--mini-fab"
+    Options.many
+        [ cs "mdl-button--mini-fab"
+        , fab
+        ]
 
 
 {-| The [Material Design Lite implementation](https://www.getmdl.io/components/index.html#buttons-section)
