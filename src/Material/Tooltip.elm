@@ -54,7 +54,7 @@ tooltip model =
   div []
     [ Icon.view "add" [ Tooltip.attach Mdl [0] ]
     , Tooltip.render Mdl [0] model.mdl
-        [Tooltip.default]
+        [Tooltip.top]
         [text "Default tooltip"]
     ]
 ```
