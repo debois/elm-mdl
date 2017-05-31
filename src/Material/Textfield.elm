@@ -19,6 +19,7 @@ module Material.Textfield
         , expandable
         , expandableIcon
         , Model
+        , Config
         , defaultModel
         , Msg(..)
         , update
