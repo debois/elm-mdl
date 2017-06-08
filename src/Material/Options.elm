@@ -270,7 +270,7 @@ many =
 presence of Options depends dynamically on other values, e.g.,
 
     Options.div
-      [ if model.isActive then css "active" else nop ]
+      [ if model.isActive then cs "active" else nop ]
       [ ... ]
 -}
 nop : Property c m
