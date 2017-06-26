@@ -32,6 +32,7 @@ type alias Model =
     , str3 : String
     , str4 : String
     , str6 : String
+    , str7 : String
     , length : Float
     , focus : Bool
     , str9 : String
@@ -46,6 +47,7 @@ model =
     , str3 = ""
     , str4 = ""
     , str6 = ""
+    , str7 = ""
     , length = 5
     , focus = False
     , str9 = "Try selecting within this text"
@@ -63,6 +65,7 @@ type Msg
     | Upd3 String
     | Upd4 String
     | Upd6 String
+    | Upd7 String
     | Upd9 String
     | SetFocus Bool
     | Focus
@@ -119,6 +122,11 @@ update msg model =
 
         Upd6 str ->
             { model | str6 = str }
+                ! []
+                |> Just
+
+        Upd7 str ->
+            { model | str7 = str }
                 ! []
                 |> Just
 
@@ -387,6 +395,36 @@ textfields model =
          , Options.onInput Upd6
          , Textfield.textarea
          , Textfield.maxlength (truncate model.length)
+         , Textfield.floatingLabel
+         ]
+       """
+      )
+    , ( "Multi-line textfield with row limit"
+      , Html.div []
+            [ Textfield.render Mdl
+                [ 11 ]
+                model.mdl
+                [ Textfield.label
+                    ("Multiline textfield ("
+                        ++ (toString (List.length (String.split "\n" model.str7)))
+                        ++ " of 3 char limit)"
+                    )
+                , Options.onInput Upd6
+                , Textfield.textarea
+                , Textfield.maxRows 3
+                , Textfield.floatingLabel
+                ]
+                []
+            ]
+      , """
+       Textfield.render Mdl [11] model.mdl
+         [ Textfield.label
+             ("Multiline textfield ("
+                 ++ (toString (List.length (String.lines model.str7)))
+                 ++ " of 3 char limit)"
+         , Options.onInput Upd6
+         , Textfield.textarea
+         , Textfield.maxRows 3
          , Textfield.floatingLabel
          ]
        """

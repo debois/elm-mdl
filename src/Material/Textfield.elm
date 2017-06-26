@@ -16,6 +16,7 @@ module Material.Textfield
         , email
         , autofocus
         , maxlength
+        , maxRows
         , expandable
         , expandableIcon
         , Model
@@ -78,7 +79,7 @@ for a live demo.
 
 import Html exposing (div, span, Html, text)
 import Html.Attributes exposing (class, type_, style)
-import Html.Events exposing (targetValue)
+import Html.Events exposing (targetValue, keyCode, defaultOptions)
 import Json.Decode as Decoder
 import Material.Component as Component exposing (Index, Indexed)
 import Material.Options as Options exposing (cs, css, nop, Style, when)
@@ -107,6 +108,7 @@ type alias Config m =
     , expandableIcon : String
     , input : List (Options.Style m)
     , container : List (Options.Style m)
+    , maxRows : Maybe Int
     }
 
 
@@ -122,6 +124,7 @@ defaultConfig =
     , expandableIcon = "search"
     , input = []
     , container = []
+    , maxRows = Nothing
     }
 
 
@@ -261,6 +264,12 @@ cols k =
     Internal.input [ Options.attribute <| Html.Attributes.cols k ]
 
 
+{-| Maximum number of rows (only Textrea).
+-}
+maxRows : Int -> Property m
+maxRows k =
+    Internal.option (\config -> { config | maxRows = Just k })
+
 
 -- MODEL
 
@@ -292,6 +301,7 @@ type Msg
     = Blur
     | Focus
     | Input String
+    | NoOp
 
 
 {-| Component update.
@@ -313,8 +323,12 @@ update _ action model =
             Just { model | isFocused = False }
 
         Focus ->
-            Just { model | isFocused = True })
-    |> flip (!) [] 
+            Just { model | isFocused = True }
+
+        NoOp ->
+            Just model
+    )
+      |> flip (!) []
 
 
 
@@ -350,6 +364,27 @@ view lift model options _ =
 
                 Just id ->
                     Internal.attribute <| Html.Attributes.id id
+
+        preventEnterWhenMaxRowsExceeded =
+            Options.onWithOptions "keydown"
+                { defaultOptions
+                  | preventDefault = True
+                }
+                ( Decoder.map2 (,) keyCode targetValue
+                  |> Decoder.andThen (\ (keyCode, value) ->
+                      let
+                          rows =
+                              value
+                              |> String.split "\n"
+                              |> List.length
+                      in
+                      if (rows >= Maybe.withDefault 0 config.maxRows) && (keyCode == 13) then
+                            Decoder.succeed (lift NoOp)
+                          else
+                            Decoder.fail ""
+                    )
+                )
+            |> when ((config.kind == Textarea) && (config.maxRows /= Nothing))
 
         expHolder =
             case config.expandable of
@@ -388,6 +423,7 @@ view lift model options _ =
             , cs "is-focused" |> when  (model.isFocused && not config.disabled)
             , cs "is-disabled" |> when  config.disabled
             , cs "mdl-textfield--expandable" |> when (config.expandable /= Nothing)
+            , preventEnterWhenMaxRowsExceeded
             ] <| expHolder
             [ Internal.applyInput summary 
                 (if config.kind == Textarea then Html.textarea else Html.input)
