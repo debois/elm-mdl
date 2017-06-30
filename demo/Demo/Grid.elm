@@ -16,7 +16,7 @@ import Demo.Page as Page
 
 style : Int -> List (Style a)
 style h = 
-  [ css "text-sizing" "border-box"
+  [ css "box-sizing" "border-box"
   , css "background-color" "#BDBDBD"
   , css "height" (toString h ++ "px")
   , css "padding-left" "8px"
