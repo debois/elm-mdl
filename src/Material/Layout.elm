@@ -82,7 +82,7 @@ sizes. Example initialisation of containing app:
     App.program
       { init = ( model, Layout.sub0 Mdl )
       , view = view
-      , subscriptions = Layout.subs Mdl model
+      , subscriptions = Layout.subs Mdl model.mdl
       , update = update
       }
 
