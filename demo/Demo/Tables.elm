@@ -408,7 +408,7 @@ sortable model =
                         Just x ->
                             "Table." ++ toString x ++ ", "
                    )
-                ++ """Table.onClick Reorder ]
+                ++ """Options.onClick Reorder ]
                   [ text "Material" ]
               , Table.th [ Table.numeric ] [ text "Quantity" ]
               , Table.th [ Table.numeric ] [ text "Unit Price" ]
