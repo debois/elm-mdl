@@ -120,6 +120,7 @@ deleteClick =
                 }
            )
 
+
 type alias Priority =
     Int
 
@@ -223,6 +224,9 @@ getActionElement config =
 
 
 {-| Creates a chip using `Html.button`
+
+NOTE. If a chip contains an action, like delete, a `Html.span` will be used even
+if you use this function.
 -}
 button : List (Property msg) -> List (Content msg) -> Html msg
 button props =
@@ -270,8 +274,14 @@ chip element props items =
 
         isContact =
             List.any (\x -> priority x == 0) items
+
+        actualElement =
+            if isDeletable then
+                Html.span
+            else
+                element
     in
-        Options.styled element
+        Options.styled actualElement
             ([ cs "mdl-chip"
              , Options.when isContact (cs "mdl-chip--contact")
              , Options.when isDeletable (cs "mdl-chip--deletable")
@@ -279,7 +289,8 @@ chip element props items =
              , Internal.attribute <| Helpers.blurOn "mouseleave"
              , Internal.attribute <| Helpers.blurOn "touchend"
              ]
-                ++ props)
+                ++ props
+            )
             content
 
 
