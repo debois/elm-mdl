@@ -42,7 +42,7 @@ Example use:
 
     import Material.Grid exposing (grid, cell, size, Device(..))
 
-    top : (Html a)
+    top : Html a
     top =
       grid []
         [ cell [ size All 4 ]
@@ -207,6 +207,11 @@ stretch =
     cs "mdl-cell--stretch"
 
 
+classForHide : Device -> String
+classForHide device =
+    "mdl-cell--hide" ++ suffix device
+
+
 {-| Specify that a cell should be hidden on given `Device`.
 -}
 hide : Device -> Style a
@@ -214,10 +219,12 @@ hide device =
     cs <|
         case device of
             All ->
-                ""
+                [ Desktop, Tablet, Phone ]
+                    |> List.map classForHide
+                    |> String.join " "
 
             _ ->
-                "mdl-cell--hide" ++ suffix device
+                classForHide device
 
 
 {-| Specify that a cell should re-order itself to position 'Int' on `Device`.
