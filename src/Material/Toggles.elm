@@ -181,9 +181,6 @@ top lift kind model summary elems =
             , cs "is-upgraded"
             , cs "is-checked" |> when cfg.value
             , cs "is-focused" |> when model.isFocused
-            , Internal.on1 "focus" lift (SetFocus True)
-            , Internal.on1 "blur" lift (SetFocus False)
-            , Internal.attribute <| blurOn "mouseup"
             ]
             (List.concat
                 [ elems
@@ -212,6 +209,9 @@ viewCheckbox lift model config elems =
             [ cs "mdl-checkbox__input"
             , Internal.attribute <| type_ "checkbox"
             , Internal.attribute <| checked summary.config.value
+            , Internal.on1 "focus" lift (SetFocus True)
+            , Internal.on1 "blur" lift (SetFocus False)
+            , Internal.attribute <| blurOn "mouseup"
             ]
             []
         , span [ class ("mdl-checkbox__label") ] elems
@@ -239,6 +239,9 @@ viewSwitch lift model config elems =
             [ cs "mdl-switch__input"
             , Internal.attribute <| type_ "checkbox"
             , Internal.attribute <| checked summary.config.value
+            , Internal.on1 "focus" lift (SetFocus True)
+            , Internal.on1 "blur" lift (SetFocus False)
+            , Internal.attribute <| blurOn "mouseup"
             ]
             []
         , span [ class "mdl-switch__label" ] elems
@@ -263,6 +266,9 @@ viewRadio lift model config elems =
             [ cs "mdl-radio__button"
             , Options.attribute <| type_ "radio"
             , Options.attribute <| checked summary.config.value
+            , Internal.on1 "focus" lift (SetFocus True)
+            , Internal.on1 "blur" lift (SetFocus False)
+            , Internal.attribute <| blurOn "mouseup"
             ]
             []
         , span [ class "mdl-radio__label" ] elems
