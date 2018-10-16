@@ -47,7 +47,7 @@ travis_pull_request=$3
 
 if [ $travis_pull_request != "false" ]; then
   # Is a pull request - need to check elm-package diff
-  string=$(elm package diff)
+  string=$(libsysconfcpus/bin/sysconfcpus -n 2 elm package diff)
   if [[ $? != 0 ]]; then
       echo "Command failed."
       exit -1
