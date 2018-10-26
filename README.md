@@ -1,3 +1,8 @@
+**This repository is no longer actively updated**. The underlying Google Material Design Lite library is now on [limited support](https://github.com/google/material-design-lite#limited-support); as a consequence, this library will not receive additional updates. 
+
+To use Material Design components with elm, try @aforemny's [elm-mdc](https://github.com/aforemny/elm-mdc).
+
+
 # Material Design Components for Elm
 
 Port of Google's
@@ -5,9 +10,12 @@ Port of Google's
 CSS/JS implementation of the
 [Material Design Specification](https://www.google.com/design/spec/material-design/introduction.html).
 
+
+
 [Live demo](https://debois.github.io/elm-mdl/) & [package documentation](http://package.elm-lang.org/packages/debois/elm-mdl/latest).
 
 [![Build Status](https://travis-ci.org/debois/elm-mdl.svg?branch=v8)](https://travis-ci.org/debois/elm-mdl).
+
 
 ### Migration
 
