@@ -418,7 +418,7 @@ view lift model properties items =
                   }
               """
             ]
-            [ Icon.view menu.icon
+            [ Icon.view model.icon
                 [ cs "material-icons"
                 , css "pointer-events" "none"
                 ]
