@@ -112,7 +112,7 @@ import Material.Internal.Dropdown as Dropdown
 import Material.Internal.Geometry as Geometry exposing (Geometry)
 import Material.Internal.Menu exposing (ItemInfo, Msg(..))
 import Material.Internal.Options as Internal
-import Material.Msg exposing (Index) 
+import Material.Msg exposing (Index)
 import Material.Options as Options exposing (Style, cs, css, styled, styled_, when)
 import Material.Ripple as Ripple
 import Mouse
@@ -418,7 +418,7 @@ view lift model properties items =
                   }
               """
             ]
-            [ Icon.view "more_vert"
+            [ Icon.view config.icon
                 [ cs "material-icons"
                 , css "pointer-events" "none"
                 ]
